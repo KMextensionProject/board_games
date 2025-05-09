@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "bgs.exception.display-stack-trace",
+  "type": "boolean",
+  "description": "Whether to provide a stack trace in errors - useful for testing/debugging purposes on non-production environments. Fefault is `false`"
+}]}
