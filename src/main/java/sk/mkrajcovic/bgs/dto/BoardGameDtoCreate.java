@@ -3,6 +3,7 @@ package sk.mkrajcovic.bgs.dto;
 import java.util.HashSet;
 import java.util.Set;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -22,6 +23,7 @@ public class BoardGameDtoCreate {
 	private Integer maxPlayers;
 
 	@Positive
+	@Schema(description = "play time in minutes")
 	private Integer estimatedPlayTime;
 
 	@Size(max = 10)

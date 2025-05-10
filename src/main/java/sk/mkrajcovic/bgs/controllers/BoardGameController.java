@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.Valid;
+import sk.mkrajcovic.bgs.api.BoardGameApi;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoCreate;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoOut;
 import sk.mkrajcovic.bgs.dto.BoardGameSearchCriteria;
@@ -25,7 +25,7 @@ import sk.mkrajcovic.bgs.utils.ValidationUtils;
 import sk.mkrajcovic.bgs.web.filter.CreatedResponseEntity;
 
 @RestController
-public class BoardGameController {
+public class BoardGameController implements BoardGameApi {
 
 	private final BoardGameService service;
 
@@ -34,18 +34,19 @@ public class BoardGameController {
 	}
 
 	@PostMapping(path = "/boardGame", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> createBoardGame(@RequestBody @Valid BoardGameDtoCreate createDto, BindingResult validationResult) {
+	public ResponseEntity<?> createBoardGame(@RequestBody BoardGameDtoCreate createDto, BindingResult validationResult) {
 		ValidationUtils.processFieldBindingErrors(validationResult.getFieldErrors());
 		Long id = service.createBoardGame(createDto);
 		return CreatedResponseEntity.create("/boardGame/{id}", id);
 	}
 
 	@GetMapping(path = "/boardGame/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public BoardGameDtoOut getBoardGame(@PathVariable Long id) {
+	public BoardGameDtoOut getBoardGame(@PathVariable Long id) { // will this be validated without @Valid?
 		return new BoardGameDtoOut(service.getBoardGame(id));
 	}
 
 	@GetMapping(path = "/boardGame/", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseStatus(HttpStatus.PARTIAL_CONTENT)
 	public Page<BoardGameSearchProjection> listBoardGames(@ModelAttribute BoardGameSearchCriteria searchCriteria, Pageable pageable) {
 		return service.searchBoardGames(searchCriteria, pageable);
 	}

@@ -7,11 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import sk.mkrajcovic.bgs.api.AuthorApi;
 import sk.mkrajcovic.bgs.repository.AuthorRepository.AuthorSearchProjection;
 import sk.mkrajcovic.bgs.service.AuthorService;
 
 @RestController
-public class AuthorController {
+public class AuthorController implements AuthorApi {
 
 	private final AuthorService authorService;
 
