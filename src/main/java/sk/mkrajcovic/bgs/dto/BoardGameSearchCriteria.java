@@ -10,7 +10,7 @@ public class BoardGameSearchCriteria {
 	private String title;
 	private Integer minPlayers;
 	private Integer maxPlayers;
-	private Integer playTime;
-//	private String author;
+	private Integer estimatedPlayTime;
+	private String author;
 
 }

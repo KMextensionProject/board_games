@@ -1,10 +1,10 @@
 package sk.mkrajcovic.bgs.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
-import sk.mkrajcovic.bgs.entity.Author;
 import sk.mkrajcovic.bgs.entity.BoardGame;
 
 @Setter
@@ -13,21 +13,26 @@ public class BoardGameDtoOut {
 
 	private Long id;
 	private long version;
+	private LocalDateTime createdAt;
+	private LocalDateTime modifiedAt;
+
 	private String title;
 	private Integer minPlayers;
 	private Integer maxPlayers;
-	private Integer playTime;
-	private List<String> authors;
+	private Integer estimatedPlayTime;
+	private List<AuthorDtoOut> authors;
 
-	public BoardGameDtoOut(BoardGame entity) {
-		this.id = entity.getId();
-		this.version = entity.getVersion();
-		this.title = entity.getTitle();
-		this.minPlayers = entity.getMinPlayers();
-		this.maxPlayers = entity.getMaxPlayers();
-		this.playTime = entity.getEstimatedPlayTime();
-		this.authors = entity.getAuthors().stream()
-			.map(Author::getName)
+	public BoardGameDtoOut(BoardGame boardGame) {
+		id = boardGame.getId();
+		version = boardGame.getVersion();
+		createdAt = boardGame.getCreatedAt();
+		modifiedAt = boardGame.getModifiedAt();
+		title = boardGame.getTitle();
+		minPlayers = boardGame.getMinPlayers();
+		maxPlayers = boardGame.getMaxPlayers();
+		estimatedPlayTime = boardGame.getEstimatedPlayTime();
+		authors = boardGame.getAuthors().stream()
+			.map(AuthorDtoOut::new)
 			.toList();
 	}
 }

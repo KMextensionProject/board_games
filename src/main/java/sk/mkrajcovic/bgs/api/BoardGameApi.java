@@ -1,7 +1,7 @@
 package sk.mkrajcovic.bgs.api;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import java.util.List;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -55,11 +55,9 @@ public interface BoardGameApi {
 	public BoardGameDtoOut getBoardGame(@NotNull @Positive Long id);
 
 	@Operation(
-		summary = "Retrieve a paginated list of board games based on search criteria"
+		summary = "Retrieve a full list of board games based on search criteria"
 	)
-	public Page<BoardGameSearchProjection> listBoardGames(
-		BoardGameSearchCriteria searchCriteria,
-		@Parameter(hidden = true) Pageable pageable);
+	public List<BoardGameSearchProjection> listBoardGames(BoardGameSearchCriteria searchCriteria);
 
 	@Operation(summary = "Delete a board game")
 	public void deleteBoardGame(@NotNull @Positive Long id);

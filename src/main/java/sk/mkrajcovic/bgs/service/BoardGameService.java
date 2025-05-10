@@ -1,10 +1,9 @@
 package sk.mkrajcovic.bgs.service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -43,6 +42,11 @@ public class BoardGameService {
 		return boardGameRepository.save(boardGame).getId();
 	}
 
+	// TODO: make an update service that will possibly reuse this method below,
+	// meaning, it will unwire the existing author from the boardgame if the update
+	// does it -> however, make a validation check on removing all authors so that
+	// at least one author is present (wait, this one will be enforced on the DTO!)
+	
 	private Set<Author> findOrCreateAuthors(Set<String> inputAuthors) {
 		// normalize author names from input
 		Set<String> authorNames = new HashSet<>(10);
@@ -76,8 +80,8 @@ public class BoardGameService {
 		return EntityUtils.getExistingEntityById(boardGameRepository, id);
 	}
 
-	public Page<BoardGameSearchProjection> searchBoardGames(BoardGameSearchCriteria searchCriteria, Pageable pageable) {
-		return boardGameRepository.pageAllByParams(searchCriteria, pageable);
+	public List<BoardGameSearchProjection> searchBoardGames(BoardGameSearchCriteria searchCriteria) {
+		return boardGameRepository.getAllByParams(searchCriteria);
 	}
 
 	public void deleteBoardGame(Long id) {

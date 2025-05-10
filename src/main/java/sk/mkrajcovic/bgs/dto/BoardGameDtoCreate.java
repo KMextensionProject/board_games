@@ -28,4 +28,6 @@ public class BoardGameDtoCreate {
 
 	@Size(max = 10)
 	private Set<@NotBlank @Size(max = 100) String> authors = new HashSet<>(10);
+	
+	// boolean lended attribute?
 }

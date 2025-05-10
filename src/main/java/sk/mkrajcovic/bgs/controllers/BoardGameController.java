@@ -1,7 +1,7 @@
 package sk.mkrajcovic.bgs.controllers;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -46,9 +46,8 @@ public class BoardGameController implements BoardGameApi {
 	}
 
 	@GetMapping(path = "/boardGame/", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseStatus(HttpStatus.PARTIAL_CONTENT)
-	public Page<BoardGameSearchProjection> listBoardGames(@ModelAttribute BoardGameSearchCriteria searchCriteria, Pageable pageable) {
-		return service.searchBoardGames(searchCriteria, pageable);
+	public List<BoardGameSearchProjection> listBoardGames(@ModelAttribute BoardGameSearchCriteria searchCriteria) {
+		return service.searchBoardGames(searchCriteria);
 	}
 
 	@DeleteMapping("/boardGame/{id}")
