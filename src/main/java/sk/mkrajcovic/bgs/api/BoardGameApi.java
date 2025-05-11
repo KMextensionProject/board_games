@@ -18,6 +18,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoCreate;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoOut;
+import sk.mkrajcovic.bgs.dto.BoardGameDtoUpdate;
 import sk.mkrajcovic.bgs.dto.BoardGameSearchCriteria;
 import sk.mkrajcovic.bgs.repository.BoardGameRepository.BoardGameSearchProjection;
 
@@ -53,6 +54,12 @@ public interface BoardGameApi {
 
 	@Operation(summary = "Retrieve detailed information about board game by its ID")
 	public BoardGameDtoOut getBoardGame(@NotNull @Positive Long id);
+
+	@Operation(summary = "Update an existing board game")
+	public BoardGameDtoOut updateBoardGame(
+		@NotNull @Positive Long id,
+		@Valid BoardGameDtoUpdate updateDto,
+		BindingResult validationResult);
 
 	@Operation(
 		summary = "Retrieve a full list of board games based on search criteria"

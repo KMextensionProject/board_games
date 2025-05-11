@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoCreate;
+import sk.mkrajcovic.bgs.dto.BoardGameDtoIn;
+import sk.mkrajcovic.bgs.dto.BoardGameDtoUpdate;
 import sk.mkrajcovic.bgs.dto.BoardGameSearchCriteria;
 import sk.mkrajcovic.bgs.entity.Author;
 import sk.mkrajcovic.bgs.entity.BoardGame;
@@ -33,20 +35,25 @@ public class BoardGameService {
 	@Transactional
 	public Long createBoardGame(BoardGameDtoCreate createDto) {
 		var boardGame = new BoardGame();
-		boardGame.setTitle(createDto.getTitle());
-		boardGame.setMinPlayers(createDto.getMinPlayers());
-		boardGame.setMaxPlayers(createDto.getMaxPlayers());
-		boardGame.setEstimatedPlayTime(createDto.getEstimatedPlayTime());
-		boardGame.setAuthors(findOrCreateAuthors(createDto.getAuthors()));
-
+		setBoardGameFields(boardGame, createDto);
 		return boardGameRepository.save(boardGame).getId();
 	}
 
-	// TODO: make an update service that will possibly reuse this method below,
-	// meaning, it will unwire the existing author from the boardgame if the update
-	// does it -> however, make a validation check on removing all authors so that
-	// at least one author is present (wait, this one will be enforced on the DTO!)
-	
+	@Transactional
+	public BoardGame updateBoardGame(Long id, BoardGameDtoUpdate updateDto) {
+		var boardGame = EntityUtils.getExistingEntityById(boardGameRepository, id);
+		setBoardGameFields(boardGame, updateDto);
+		return boardGameRepository.save(boardGame);
+	}
+
+	private void setBoardGameFields(BoardGame boardGame, BoardGameDtoIn dtoIn) {
+		boardGame.setTitle(dtoIn.getTitle());
+		boardGame.setMinPlayers(dtoIn.getMinPlayers());
+		boardGame.setMaxPlayers(dtoIn.getMaxPlayers());
+		boardGame.setEstimatedPlayTime(dtoIn.getEstimatedPlayTime());
+		boardGame.setAuthors(findOrCreateAuthors(dtoIn.getAuthors()));
+	}
+
 	private Set<Author> findOrCreateAuthors(Set<String> inputAuthors) {
 		// normalize author names from input
 		Set<String> authorNames = new HashSet<>(10);
