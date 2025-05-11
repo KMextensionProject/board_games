@@ -42,6 +42,7 @@ public class BoardGameService {
 	@Transactional
 	public BoardGame updateBoardGame(Long id, BoardGameDtoUpdate updateDto) {
 		var boardGame = EntityUtils.getExistingEntityById(boardGameRepository, id);
+		EntityUtils.checkStaleUpdate(updateDto.getVersion(), boardGame.getVersion());
 		setBoardGameFields(boardGame, updateDto);
 		return boardGameRepository.save(boardGame);
 	}

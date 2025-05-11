@@ -18,9 +18,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import sk.mkrajcovic.bgs.ClientException;
 import sk.mkrajcovic.bgs.GlobalException;
 import sk.mkrajcovic.bgs.InfrastructureException;
+import sk.mkrajcovic.bgs.config.BgsMessageSource;
 import sk.mkrajcovic.bgs.dto.ExceptionDtoOut;
 import sk.mkrajcovic.bgs.web.filter.MessageCodeConstants;
-import sk.mkrajcovic.bgs.web.filter.NaskMessageSource;
 
 /**
  * Every exception thrown from a Controller and layers beneath will be processed
@@ -44,9 +44,11 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 	@Value("${bgs.exception.display-stack-trace:false}")
 	private boolean displayStackTrace;
 
-	private final NaskMessageSource messageSource;
+	private final BgsMessageSource messageSource;
 
-	public ExceptionHandlerController(NaskMessageSource messageSource) {
+	public ExceptionHandlerController(BgsMessageSource messageSource) {
+		System.out.println( messageSource.getBasenameSet());
+		System.out.println(messageSource.getMessage("Error"));
 		this.messageSource = messageSource;
 	}
 

@@ -15,27 +15,23 @@ public class EntityUtils {
 	}
 
 	/**
-	 * Checks for stale updates between two {@link BaseEntity} instances based on their
+	 * Checks for stale updates between two entities based on their
 	 * version number.
 	 * <p>
 	 * Use this method as pre-check before hitting the database, as it may be
 	 * beneficial by reducing useless database access and providing better user
 	 * friendly message about the issue.
 	 *
-	 * @param <T>    Type of BaseEntity
-	 * @param first  BaseEntity instance
-	 * @param second BaseEntity instance
-	 * @throws IllegalArgumentException if either argument is {@code null}
 	 * @throws ClientException          if the versions of the entities differ
 	 */
-//	public static <T extends BaseEntity> void checkStaleUpdate(T first, T second) {
-//		if (isNull(first) || isNull(second)) {
-//			throw new IllegalArgumentException("Neither of arguments can be null to perform this check");
-//		}
-//		if (first.getVersion() != second.getVersion()) {
-//			throw new ClientException(HttpStatus.CONFLICT, "Conflict");
-//		}
-//	}
+	public static void checkStaleUpdate(long e1Version, long e2Version) {
+		if (e1Version != e2Version) {
+			throw new ClientException(
+				HttpStatus.CONFLICT,
+				MessageCodeConstants.STALE_UPDATE
+			);
+		}
+	}
 
 	/**
 	 * Retrieves an entity from the given {@link CrudRepository} if it is found,

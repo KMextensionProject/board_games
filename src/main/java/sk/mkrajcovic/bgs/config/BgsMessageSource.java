@@ -1,7 +1,8 @@
-package sk.mkrajcovic.bgs.web.filter;
+package sk.mkrajcovic.bgs.config;
 
 import java.util.Locale;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
 
@@ -11,15 +12,17 @@ import org.springframework.stereotype.Component;
  *
  * @author mkrajcovicux
  */
+@Primary
 @Component
-public class NaskMessageSource extends ReloadableResourceBundleMessageSource {
+public class BgsMessageSource extends ReloadableResourceBundleMessageSource {
 
 	private static final Locale DEFAULT_LOCALE = Locale.getDefault();
 
-	public NaskMessageSource() {
-		setBasename("classpath:messages");
+	public BgsMessageSource() {
+		setBasename("classpath:/messages");
 		setDefaultEncoding("UTF-8");
 		setUseCodeAsDefaultMessage(true);
+		System.out.println(getClass().getClassLoader().getResource("messages.properties"));
 	}
 
 	/**
