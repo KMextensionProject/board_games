@@ -21,7 +21,7 @@ public interface BoardGameRepository extends JpaRepository<BoardGame, Long> {
 		WHERE (:#{#filter.title} IS NULL OR bg.title LIKE %:#{#filter.title}%)
 		AND (:#{#filter.minPlayers} IS NULL OR bg.minPlayers = :#{#filter.minPlayers})
 		AND (:#{#filter.maxPlayers} IS NULL OR bg.maxPlayers = :#{#filter.maxPlayers})
-		AND (:#{#filter.playTime} IS NULL OR bg.estimatedPlayTime = :#{#filter.playTime})
+		AND (:#{#filter.estimatedPlayTime} IS NULL OR bg.estimatedPlayTime = :#{#filter.estimatedPlayTime})
 		AND (:#{#filter.author} IS NULL OR EXISTS (
 			 SELECT 1
 			 FROM bg.authors a
