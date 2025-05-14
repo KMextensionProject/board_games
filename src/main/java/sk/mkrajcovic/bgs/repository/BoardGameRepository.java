@@ -1,6 +1,7 @@
 package sk.mkrajcovic.bgs.repository;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -25,11 +26,19 @@ public interface BoardGameRepository extends JpaRepository<BoardGame, Long> {
 		AND (:#{#filter.author} IS NULL OR EXISTS (
 			 SELECT 1
 			 FROM bg.authors a
-			 WHERE a.name LIKE %:#{#filter.author}%))""";
+			 WHERE a.name LIKE %:#{#filter.author}%))
+		ORDER BY bg.id ASC""";
 
 	@Query(BOARD_GAME_SEARCH_QUERY)
 	public List<BoardGameSearchProjection> getAllByParams(
-		@Param("filter") BoardGameSearchCriteria filter);
+		@Param("filter") BoardGameSearchCriteria filter
+	);
+
+	// if the order by were missing, we would get duplicates here
+	@Query(BOARD_GAME_SEARCH_QUERY)
+	public Stream<BoardGameSearchProjection> streamAllByParams(
+		@Param("filter") BoardGameSearchCriteria filter
+	);
 
 	interface BoardGameSearchProjection {
 		Long getId();

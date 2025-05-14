@@ -22,7 +22,6 @@ public class BgsMessageSource extends ReloadableResourceBundleMessageSource {
 		setBasename("classpath:/messages");
 		setDefaultEncoding("UTF-8");
 		setUseCodeAsDefaultMessage(true);
-		System.out.println(getClass().getClassLoader().getResource("messages.properties"));
 	}
 
 	/**

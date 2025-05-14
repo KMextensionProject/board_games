@@ -1,12 +1,19 @@
 package sk.mkrajcovic.bgs.service;
 
+import static sk.mkrajcovic.bgs.utils.FileNameGenerator.generateFileNameWithTimestamp;
+
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.transaction.Transactional;
+import jakarta.servlet.http.HttpServletResponse;
+import sk.mkrajcovic.bgs.InfrastructureException;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoCreate;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoIn;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoUpdate;
@@ -14,12 +21,18 @@ import sk.mkrajcovic.bgs.dto.BoardGameSearchCriteria;
 import sk.mkrajcovic.bgs.entity.Author;
 import sk.mkrajcovic.bgs.entity.BoardGame;
 import sk.mkrajcovic.bgs.repository.AuthorRepository;
+import sk.mkrajcovic.bgs.repository.AuthorRepository.AuthorSearchProjection;
 import sk.mkrajcovic.bgs.repository.BoardGameRepository;
 import sk.mkrajcovic.bgs.repository.BoardGameRepository.BoardGameSearchProjection;
 import sk.mkrajcovic.bgs.utils.EntityUtils;
+import sk.mkrajcovic.bgs.utils.TypeMap;
+import sk.mkrajcovic.bgs.utils.XlsxUtils;
+import sk.mkrajcovic.bgs.web.filter.MessageCodeConstants;
 
 @Service
 public class BoardGameService {
+
+	private static final String BOARD_GAME_XLSX_TEMPLATE = "templates/exports/xlsx/BoardGamesTemplate.xlsx";
 
 	private final BoardGameRepository boardGameRepository;
 	private final AuthorRepository authorRepository;
@@ -97,4 +110,33 @@ public class BoardGameService {
 		boardGameRepository.delete(boardGame);
 	}
 
+	@Transactional(readOnly = true)
+	public void exportBoardGamesToXlsx(BoardGameSearchCriteria searchCriteria, HttpServletResponse response) {
+		try (Stream<TypeMap> boardGameStream = boardGameRepository.streamAllByParams(searchCriteria)
+				.map(this::convertToTypeMap)) {
+
+			XlsxUtils.generateXlsx(
+				BOARD_GAME_XLSX_TEMPLATE,
+				boardGameStream,
+				generateFileNameWithTimestamp("BoarGames", ".xlsx"),
+				response
+			);
+		} catch (IOException ioex) {
+			throw new InfrastructureException(MessageCodeConstants.ERROR, ioex);
+		}
+	}
+
+	private TypeMap convertToTypeMap(BoardGameSearchProjection boardGame) {
+		return new TypeMap(
+			"id", boardGame.getId(),
+			"title", boardGame.getTitle(),
+			"minPlayers", boardGame.getMinPlayers(),
+			"maxPlayers", boardGame.getMaxPlayers(),
+			"playTime", boardGame.getEstimatedPlayTime(),
+			"authors", boardGame.getAuthors()
+				.stream()
+				.map(AuthorSearchProjection::getName)
+				.collect(Collectors.joining(", "))
+		);
+	}
 }

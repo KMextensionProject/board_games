@@ -47,8 +47,6 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 	private final BgsMessageSource messageSource;
 
 	public ExceptionHandlerController(BgsMessageSource messageSource) {
-		System.out.println( messageSource.getBasenameSet());
-		System.out.println(messageSource.getMessage("Error"));
 		this.messageSource = messageSource;
 	}
 

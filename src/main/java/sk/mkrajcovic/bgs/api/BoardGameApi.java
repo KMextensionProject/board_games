@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -50,7 +51,8 @@ public interface BoardGameApi {
 	)
 	public ResponseEntity<?> createBoardGame(
 		@Valid BoardGameDtoCreate createDto, // try validated on controller, if the override is possible there
-		@Parameter(hidden = true) BindingResult validationResult);
+		@Parameter(hidden = true) BindingResult validationResult
+	);
 
 	@Operation(summary = "Retrieve detailed information about board game by its ID")
 	public BoardGameDtoOut getBoardGame(@NotNull @Positive Long id);
@@ -59,7 +61,8 @@ public interface BoardGameApi {
 	public BoardGameDtoOut updateBoardGame(
 		@NotNull @Positive Long id,
 		@Valid BoardGameDtoUpdate updateDto,
-		BindingResult validationResult);
+		BindingResult validationResult
+	);
 
 	@Operation(
 		summary = "Retrieve a full list of board games based on search criteria"
@@ -68,4 +71,10 @@ public interface BoardGameApi {
 
 	@Operation(summary = "Delete a board game")
 	public void deleteBoardGame(@NotNull @Positive Long id);
+
+	@Operation(summary = "Export list of board games into XLSX file based on search criteria")
+	public void exportBoardGamesToXlsx(
+		BoardGameSearchCriteria searchCriteria,
+		@Parameter(hidden = true) HttpServletResponse response
+	);
 }

@@ -1,9 +1,10 @@
 package sk.mkrajcovic.bgs.controllers;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletResponse;
 import sk.mkrajcovic.bgs.api.BoardGameApi;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoCreate;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoOut;
@@ -41,7 +43,7 @@ public class BoardGameController implements BoardGameApi {
 		Long id = service.createBoardGame(createDto);
 		return CreatedResponseEntity.create("/boardGame/{id}", id);
 	}
-	
+
 	@PutMapping(path = "/boardGame/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 	public BoardGameDtoOut updateBoardGame(@PathVariable Long id, @RequestBody BoardGameDtoUpdate updateDto, BindingResult validationResult) {
 		ValidationUtils.processFieldBindingErrors(validationResult.getFieldErrors());
@@ -62,5 +64,10 @@ public class BoardGameController implements BoardGameApi {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteBoardGame(@PathVariable Long id) {
 		service.deleteBoardGame(id);
+	}
+
+	@GetMapping(path = "/boardGame/export/")
+	public void exportBoardGamesToXlsx(@ModelAttribute BoardGameSearchCriteria searchCriteria, HttpServletResponse response) {
+		service.exportBoardGamesToXlsx(searchCriteria, response);
 	}
 }
