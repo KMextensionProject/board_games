@@ -38,7 +38,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.registerModule(javaTimeModule);
 		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-		mapper.enable(SerializationFeature.INDENT_OUTPUT);
 
 		return mapper;
 	}
