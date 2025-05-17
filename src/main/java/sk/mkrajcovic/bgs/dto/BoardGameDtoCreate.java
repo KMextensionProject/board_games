@@ -11,10 +11,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
-import sk.mkrajcovic.bgs.entity.BoardGame.AgeRange;
 
 @Getter
-public class BoardGameDtoCreate {
+public class BoardGameDtoCreate implements BoardGameDtoIn {
 
 	@NotBlank
 	@Size(max = 50)
@@ -47,7 +46,7 @@ public class BoardGameDtoCreate {
 	// publisher? (Dino)
 
 	@Getter
-	public static class AgeRangeDtoCreate {
+	public static class AgeRangeDtoCreate implements AgeRangeDtoIn {
 		@Min(3)
 		@Max(18)
 		private Integer minAge;
@@ -55,11 +54,6 @@ public class BoardGameDtoCreate {
 		@Min(4)
 		@Max(100)
 		private Integer maxAge;
-
 		// validate minAge is <= than maxAge
-
-		public AgeRange asEntity() {
-			return new AgeRange(minAge, maxAge);
-		}
 	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -53,7 +54,10 @@ public interface BoardGameApi {
 			)
 		)
 	)
-	public ResponseEntity<?> createBoardGame(@Valid BoardGameDtoCreate createDto);
+	public ResponseEntity<?> createBoardGame(
+		@Valid BoardGameDtoCreate createDto,
+		BindingResult bindingResult
+	);
 
 	@Operation(summary = "Retrieve detailed information about board game by its ID")
 	public BoardGameDtoOut getBoardGame(@NotNull @Positive Long id);
@@ -61,7 +65,8 @@ public interface BoardGameApi {
 	@Operation(summary = "Update an existing board game")
 	public BoardGameDtoOut updateBoardGame(
 		@NotNull @Positive Long id,
-		@Valid BoardGameDtoUpdate updateDto
+		@Valid BoardGameDtoUpdate updateDto,
+		BindingResult bindingResult
 	);
 
 	@Operation(

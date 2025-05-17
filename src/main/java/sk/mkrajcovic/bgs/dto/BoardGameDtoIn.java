@@ -2,8 +2,6 @@ package sk.mkrajcovic.bgs.dto;
 
 import java.util.Set;
 
-import sk.mkrajcovic.bgs.dto.BoardGameDtoCreate.AgeRangeDtoCreate;
-
 public interface BoardGameDtoIn {
 
 	String getTitle();
@@ -12,8 +10,7 @@ public interface BoardGameDtoIn {
 	Integer getMaxPlayers();
 	Integer getEstimatedPlayTime();
 	Set<String> getAuthors();
-	// here is the problem
-//	AgeRangeDtoCreate getAgeRange();
+	AgeRangeDtoIn getAgeRange();
 	Boolean getIsCooperative();
 	Boolean getCanPlayOnlyOnce();
 }

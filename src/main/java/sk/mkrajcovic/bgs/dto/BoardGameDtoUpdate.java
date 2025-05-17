@@ -3,27 +3,39 @@ package sk.mkrajcovic.bgs.dto;
 import java.util.HashSet;
 import java.util.Set;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-public class BoardGameDtoUpdate extends BoardGameDtoCreate {
+public class BoardGameDtoUpdate implements BoardGameDtoIn {
 
 	@NotBlank
+	@Size(max = 50)
+	private String title;
+
+	@NotBlank
+	@Size(max = 500)
 	private String description;
 
 	@NotNull
+	@Positive
 	private Integer minPlayers;
 
 	@NotNull
+	@Positive
 	private Integer maxPlayers;
 
 	@NotNull
+	@Positive
+	@Schema(description = "play time in minutes")
 	private Integer estimatedPlayTime;
 
 	@NotNull
@@ -33,6 +45,8 @@ public class BoardGameDtoUpdate extends BoardGameDtoCreate {
 	@Size(min = 1, max = 10)
 	private Set<@NotBlank @Size(max = 100) String> authors = new HashSet<>(10);
 
+	private Boolean isCooperative;
+
 	@NotNull
 	private Boolean canPlayOnlyOnce;
 
@@ -40,14 +54,16 @@ public class BoardGameDtoUpdate extends BoardGameDtoCreate {
 	@PositiveOrZero
 	private Long version;
 
-	
-	// This is the problem !!!!! inheritance in this level and overriding properties
 	@Getter
-	@Setter
-	public static class AgeRangeDtoUpdate extends AgeRangeDtoCreate {
+	public static class AgeRangeDtoUpdate implements AgeRangeDtoIn {
 		@NotNull
+		@Min(3)
+		@Max(18)
 		private Integer minAge;
+
 		@NotNull
+		@Min(4)
+		@Max(100)
 		private Integer maxAge;
 	}
 }

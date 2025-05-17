@@ -1,7 +1,5 @@
 package sk.mkrajcovic.bgs.controllers;
 
-import static java.util.stream.Collectors.joining;
-
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Objects;
@@ -9,17 +7,12 @@ import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatus.Series;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import sk.mkrajcovic.bgs.ClientException;
@@ -71,30 +64,6 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 		exceptionDto.setType(resolveErrorType(Series.CLIENT_ERROR));
 		exceptionDto.setStackTrace(displayStackTrace ? readStackTrace(ex) : null);
 		return new ResponseEntity<>(exceptionDto, HttpStatus.FORBIDDEN);
-	}
-
-	@Override
-	protected ResponseEntity<Object> handleMethodArgumentNotValid(
-			MethodArgumentNotValidException ex,
-			HttpHeaders headers,
-			HttpStatusCode status,
-			WebRequest request) {
-
-        var clientException = new ClientException(HttpStatus.BAD_REQUEST, buildErrorMessage(ex.getFieldErrors()));
-        LOG.error("ERROR", clientException);
-
-        return createResponseEntity(clientException)
-            .body(serializeException(clientException));
-    }
-
-	private static String buildErrorMessage(List<FieldError> fieldErrors) {
-		if (fieldErrors == null || fieldErrors.isEmpty()) {
-			LOG.warn("MethodArgumentNotValidException was thrown, but no field errors are present!");
-			return "";
-		}
-		return fieldErrors.stream()
-			.map(error -> error.getField() + ": " + error.getDefaultMessage())
-			.collect(joining(", "));
 	}
 
 	/**
