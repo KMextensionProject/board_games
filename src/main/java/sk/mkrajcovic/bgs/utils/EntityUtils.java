@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.HttpStatus;
 
 import sk.mkrajcovic.bgs.ClientException;
-import sk.mkrajcovic.bgs.web.filter.MessageCodeConstants;
+import sk.mkrajcovic.bgs.web.MessageCodeConstants;
 
 public class EntityUtils {
 

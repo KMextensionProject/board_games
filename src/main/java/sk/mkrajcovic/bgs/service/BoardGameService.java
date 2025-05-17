@@ -27,7 +27,7 @@ import sk.mkrajcovic.bgs.repository.BoardGameRepository.BoardGameSearchProjectio
 import sk.mkrajcovic.bgs.utils.EntityUtils;
 import sk.mkrajcovic.bgs.utils.TypeMap;
 import sk.mkrajcovic.bgs.utils.XlsxUtils;
-import sk.mkrajcovic.bgs.web.filter.MessageCodeConstants;
+import sk.mkrajcovic.bgs.web.MessageCodeConstants;
 
 @Service
 public class BoardGameService {

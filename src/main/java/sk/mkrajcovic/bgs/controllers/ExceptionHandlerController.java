@@ -20,7 +20,7 @@ import sk.mkrajcovic.bgs.GlobalException;
 import sk.mkrajcovic.bgs.InfrastructureException;
 import sk.mkrajcovic.bgs.config.BgsMessageSource;
 import sk.mkrajcovic.bgs.dto.ExceptionDtoOut;
-import sk.mkrajcovic.bgs.web.filter.MessageCodeConstants;
+import sk.mkrajcovic.bgs.web.MessageCodeConstants;
 
 /**
  * Every exception thrown from a Controller and layers beneath will be processed

@@ -12,7 +12,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import sk.mkrajcovic.bgs.InfrastructureException;
-import sk.mkrajcovic.bgs.web.filter.MessageCodeConstants;
+import sk.mkrajcovic.bgs.web.MessageCodeConstants;
 
 /**
  * This class provides convenient methods to load resources of various types

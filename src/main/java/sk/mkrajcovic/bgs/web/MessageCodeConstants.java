@@ -1,4 +1,4 @@
-package sk.mkrajcovic.bgs.web.filter;
+package sk.mkrajcovic.bgs.web;
 
 /**
  * Centralized list of message codes.<br>
