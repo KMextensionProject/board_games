@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.servlet.http.HttpServletResponse;
 import sk.mkrajcovic.bgs.InfrastructureException;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoCreate;
-import sk.mkrajcovic.bgs.dto.BoardGameDtoIn;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoUpdate;
 import sk.mkrajcovic.bgs.dto.BoardGameSearchCriteria;
 import sk.mkrajcovic.bgs.entity.Author;
@@ -60,12 +59,16 @@ public class BoardGameService {
 		return boardGameRepository.save(boardGame);
 	}
 
-	private void setBoardGameFields(BoardGame boardGame, BoardGameDtoIn dtoIn) {
+	private void setBoardGameFields(BoardGame boardGame, BoardGameDtoCreate dtoIn) {
 		boardGame.setTitle(dtoIn.getTitle());
+		boardGame.setDescription(dtoIn.getDescription());
 		boardGame.setMinPlayers(dtoIn.getMinPlayers());
 		boardGame.setMaxPlayers(dtoIn.getMaxPlayers());
 		boardGame.setEstimatedPlayTime(dtoIn.getEstimatedPlayTime());
+		boardGame.setAgeRange(dtoIn.getAgeRange().asEntity());
 		boardGame.setAuthors(findOrCreateAuthors(dtoIn.getAuthors()));
+		boardGame.setCanPlayOnlyOnce(dtoIn.getCanPlayOnlyOnce());
+		boardGame.setIsCooperative(dtoIn.getIsCooperative());
 	}
 
 	private Set<Author> findOrCreateAuthors(Set<String> inputAuthors) {

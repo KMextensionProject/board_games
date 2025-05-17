@@ -4,17 +4,24 @@ import java.util.HashSet;
 import java.util.Set;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import sk.mkrajcovic.bgs.entity.BoardGame.AgeRange;
 
 @Getter
-public class BoardGameDtoCreate implements BoardGameDtoIn {
+public class BoardGameDtoCreate {
 
 	@NotBlank
 	@Size(max = 50)
 	private String title;
+
+	@Size(max = 500)
+	private String description;
 
 	@Positive
 	private Integer minPlayers;
@@ -26,8 +33,33 @@ public class BoardGameDtoCreate implements BoardGameDtoIn {
 	@Schema(description = "play time in minutes")
 	private Integer estimatedPlayTime;
 
+	@Valid
+	private AgeRangeDtoCreate ageRange;
+
 	@Size(max = 10)
 	private Set<@NotBlank @Size(max = 100) String> authors = new HashSet<>(10);
 
-	// boolean lended attribute?
+	private Boolean isCooperative;
+	private Boolean canPlayOnlyOnce;
+
+	// add language?
+	// link / picture?
+	// publisher? (Dino)
+
+	@Getter
+	public static class AgeRangeDtoCreate {
+		@Min(3)
+		@Max(18)
+		private Integer minAge;
+
+		@Min(4)
+		@Max(100)
+		private Integer maxAge;
+
+		// validate minAge is <= than maxAge
+
+		public AgeRange asEntity() {
+			return new AgeRange(minAge, maxAge);
+		}
+	}
 }

@@ -1,9 +1,20 @@
---DROP TABLE IF EXISTS public.flyway_schema_history;
---DROP TABLE IF EXISTS public.board_game;
---DROP TABLE IF EXISTS public.author;
---DROP TABLE IF EXISTS public.board_game_author;
---DROP TABLE IF EXISTS public.borrower;
---DROP TABLE IF EXISTS public.lend_log;
+-- drop indexes first (indexes are separate from tables)
+DROP INDEX IF EXISTS public.idx_board_game_title;
+DROP INDEX IF EXISTS public.idx_board_game_min_players;
+DROP INDEX IF EXISTS public.idx_board_game_max_players;
+DROP INDEX IF EXISTS public.idx_board_game_estimated_play_time;
+DROP INDEX IF EXISTS public.idx_board_game_is_cooperative;
+DROP INDEX IF EXISTS public.idx_board_game_one_time_play;
+DROP INDEX IF EXISTS public.idx_board_game_min_age;
+DROP INDEX IF EXISTS public.idx_board_game_max_age;
+DROP INDEX IF EXISTS public.idx_board_game_description;
+
+-- drop foreign key constraints and tables
+DROP TABLE IF EXISTS public.board_game CASCADE;
+DROP TABLE IF EXISTS public.author CASCADE;
+DROP TABLE IF EXISTS public.board_game_author CASCADE;
+DROP TABLE IF EXISTS public.borrower CASCADE;
+DROP TABLE IF EXISTS public.lend_log CASCADE;
 
 CREATE TABLE board_game (
     id BIGSERIAL PRIMARY KEY,
@@ -13,7 +24,12 @@ CREATE TABLE board_game (
     title VARCHAR(50) NOT NULL,
     min_players INTEGER,
     max_players INTEGER,
-    estimated_play_time INTEGER
+    estimated_play_time INTEGER,
+    description VARCHAR(500),
+    min_age INTEGER,
+    max_age INTEGER,
+    can_play_only_once BOOLEAN,
+    is_cooperative BOOLEAN
 );
 CREATE TABLE author (
     id BIGSERIAL PRIMARY KEY,
@@ -43,3 +59,12 @@ CREATE TABLE lend_log (
     return_date DATE,
     notes VARCHAR(255)
 );
+CREATE INDEX idx_board_game_title ON board_game(title);
+CREATE INDEX idx_board_game_min_players ON board_game(min_players);
+CREATE INDEX idx_board_game_max_players ON board_game(max_players);
+CREATE INDEX idx_board_game_estimated_play_time ON board_game(estimated_play_time);
+CREATE INDEX idx_board_game_is_cooperative ON board_game(is_cooperative);
+CREATE INDEX idx_board_game_one_time_play ON board_game(can_play_only_once);
+CREATE INDEX idx_board_game_min_age ON board_game(min_age);
+CREATE INDEX idx_board_game_max_age ON board_game(max_age);
+CREATE INDEX idx_board_game_description ON board_game(description);

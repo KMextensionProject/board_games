@@ -34,15 +34,20 @@ public interface BoardGameApi {
 				schema = @Schema(implementation = BoardGameDtoCreate.class),
 				examples = @ExampleObject(value = """
 					{
-						"title": "My test board game",
+						"title": "EXIT - Návrat do opuštěné chaty",
+						"description": "Hra je v úrovni \\"Pokročilý\\"",
 						"minPlayers": 1,
-						"maxPlayers": 7,
-						"estimatedPlayTime": 30,
+						"maxPlayers": 4,
+						"estimatedPlayTime": 120,
+						"ageRange": {
+							"minAge": 12
+						},
 						"authors": [
-							"Frank Nowitsky",
-							"Susan Lombard",
-							"Daenish Portorea"
-						]
+							"Inka Brand",
+							"Markus Brand"
+						],
+						"isCooperative": true,
+						"canPlayOnlyOnce": true
 					}
 				""")
 			)

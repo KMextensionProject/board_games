@@ -3,38 +3,51 @@ package sk.mkrajcovic.bgs.dto;
 import java.util.HashSet;
 import java.util.Set;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
-public class BoardGameDtoUpdate implements BoardGameDtoIn {
+public class BoardGameDtoUpdate extends BoardGameDtoCreate {
 
 	@NotBlank
-	@Size(max = 50)
-	private String title;
-	
+	private String description;
+
 	@NotNull
-	@Positive 
 	private Integer minPlayers;
 
 	@NotNull
-	@Positive
 	private Integer maxPlayers;
 
 	@NotNull
-	@Positive
-	@Schema(description = "play time in minutes")
 	private Integer estimatedPlayTime;
+
+	@NotNull
+	@Valid
+	private AgeRangeDtoUpdate ageRange;
 
 	@Size(min = 1, max = 10)
 	private Set<@NotBlank @Size(max = 100) String> authors = new HashSet<>(10);
 
 	@NotNull
+	private Boolean canPlayOnlyOnce;
+
+	@NotNull
 	@PositiveOrZero
 	private Long version;
+
+	
+	// This is the problem !!!!! inheritance in this level and overriding properties
+	@Getter
+	@Setter
+	public static class AgeRangeDtoUpdate extends AgeRangeDtoCreate {
+		@NotNull
+		private Integer minAge;
+		@NotNull
+		private Integer maxAge;
+	}
 }

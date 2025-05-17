@@ -1,11 +1,12 @@
 package sk.mkrajcovic.bgs.dto;
 
+import java.util.Collection;
+import java.util.List;
+
 import lombok.Getter;
-import lombok.Setter;
 import sk.mkrajcovic.bgs.entity.Author;
 
 @Getter
-@Setter
 public class AuthorDtoOut {
 
 	private Long id;
@@ -16,4 +17,9 @@ public class AuthorDtoOut {
 		this.name = author.getName();
 	}
 
+	public static List<AuthorDtoOut> mapFromCollection(Collection<Author> authors) {
+		return authors.stream()
+			.map(AuthorDtoOut::new)
+			.toList();
+	}
 }
