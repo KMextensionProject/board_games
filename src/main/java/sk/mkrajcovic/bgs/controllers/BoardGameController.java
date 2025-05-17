@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,7 +24,6 @@ import sk.mkrajcovic.bgs.dto.BoardGameDtoUpdate;
 import sk.mkrajcovic.bgs.dto.BoardGameSearchCriteria;
 import sk.mkrajcovic.bgs.repository.BoardGameRepository.BoardGameSearchProjection;
 import sk.mkrajcovic.bgs.service.BoardGameService;
-import sk.mkrajcovic.bgs.utils.ValidationUtils;
 import sk.mkrajcovic.bgs.web.filter.CreatedResponseEntity;
 
 @RestController
@@ -38,26 +36,24 @@ public class BoardGameController implements BoardGameApi {
 	}
 
 	@PostMapping(path = "/boardGame", consumes = APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> createBoardGame(@RequestBody BoardGameDtoCreate createDto, BindingResult validationResult) {
-		ValidationUtils.processFieldBindingErrors(validationResult.getFieldErrors());
+	public ResponseEntity<?> createBoardGame(@RequestBody BoardGameDtoCreate createDto) {
 		Long id = service.createBoardGame(createDto);
 		return CreatedResponseEntity.create("/boardGame/{id}", id);
 	}
 
 	@PutMapping(path = "/boardGame/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-	public BoardGameDtoOut updateBoardGame(@PathVariable Long id, @RequestBody BoardGameDtoUpdate updateDto, BindingResult validationResult) {
-		ValidationUtils.processFieldBindingErrors(validationResult.getFieldErrors());
+	public BoardGameDtoOut updateBoardGame(@PathVariable Long id, @RequestBody BoardGameDtoUpdate updateDto) {
 		return new BoardGameDtoOut(service.updateBoardGame(id, updateDto));
 	}
 
 	@GetMapping(path = "/boardGame/{id}", produces = APPLICATION_JSON_VALUE)
-	public BoardGameDtoOut getBoardGame(@PathVariable Long id) { // will this be validated without @Valid?
+	public BoardGameDtoOut getBoardGame(@PathVariable Long id) {
 		return new BoardGameDtoOut(service.getBoardGame(id));
 	}
 
 	@GetMapping(path = "/boardGame/", produces = APPLICATION_JSON_VALUE)
 	public List<BoardGameSearchProjection> listBoardGames(@ModelAttribute BoardGameSearchCriteria searchCriteria) {
-		return service.searchBoardGames(searchCriteria);
+		return service.searchBoardGames(searchCriteria); // add ignorecase searching (tl fields)
 	}
 
 	@DeleteMapping("/boardGame/{id}")
