@@ -13,4 +13,5 @@ public interface BoardGameDtoIn {
 	AgeRangeDtoIn getAgeRange();
 	Boolean getIsCooperative();
 	Boolean getCanPlayOnlyOnce();
+	Boolean getIsExtension();
 }

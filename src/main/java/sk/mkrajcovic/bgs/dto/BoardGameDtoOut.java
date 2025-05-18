@@ -25,8 +25,12 @@ public class BoardGameDtoOut {
 	
 	private Boolean isCooperative;
 	private Boolean canPlayOnlyOnce;
+	private Boolean isExtension;
 
 	public BoardGameDtoOut(BoardGame boardGame) {
+		if (boardGame == null) {
+			return;
+		}
 		id = boardGame.getId();
 		version = boardGame.getVersion();
 		createdAt = boardGame.getCreatedAt();
@@ -38,6 +42,7 @@ public class BoardGameDtoOut {
 		estimatedPlayTime = boardGame.getEstimatedPlayTime();
 		isCooperative = boardGame.getIsCooperative();
 		canPlayOnlyOnce = boardGame.getCanPlayOnlyOnce();
+		isExtension = boardGame.getIsExtension();
 		ageRange = new AgeRangeDtoOut(boardGame.getAgeRange());
 		authors = AuthorDtoOut.mapFromCollection(boardGame.getAuthors());
 	}

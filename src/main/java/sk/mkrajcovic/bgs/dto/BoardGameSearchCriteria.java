@@ -15,5 +15,6 @@ public class BoardGameSearchCriteria {
 	private Integer maxAge;
 	private Boolean isCooperative;
 	private Boolean canPlayOnlyOnce;
+	private Boolean isExtension;
 	private String author;
 }

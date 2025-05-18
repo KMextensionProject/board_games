@@ -3,8 +3,6 @@ DROP INDEX IF EXISTS public.idx_board_game_title;
 DROP INDEX IF EXISTS public.idx_board_game_min_players;
 DROP INDEX IF EXISTS public.idx_board_game_max_players;
 DROP INDEX IF EXISTS public.idx_board_game_estimated_play_time;
-DROP INDEX IF EXISTS public.idx_board_game_is_cooperative;
-DROP INDEX IF EXISTS public.idx_board_game_one_time_play;
 DROP INDEX IF EXISTS public.idx_board_game_min_age;
 DROP INDEX IF EXISTS public.idx_board_game_max_age;
 DROP INDEX IF EXISTS public.idx_board_game_description;
@@ -30,6 +28,7 @@ CREATE TABLE board_game (
     estimated_play_time INTEGER,
     is_cooperative BOOLEAN,
     can_play_only_once BOOLEAN,
+    is_extension BOOLEAN NOT NULL,
     version BIGINT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at TIMESTAMP
@@ -68,8 +67,6 @@ CREATE INDEX idx_board_game_title_normalized ON board_game(title_normalized);
 CREATE INDEX idx_board_game_min_players ON board_game(min_players);
 CREATE INDEX idx_board_game_max_players ON board_game(max_players);
 CREATE INDEX idx_board_game_estimated_play_time ON board_game(estimated_play_time);
-CREATE INDEX idx_board_game_is_cooperative ON board_game(is_cooperative);
-CREATE INDEX idx_board_game_one_time_play ON board_game(can_play_only_once);
 CREATE INDEX idx_board_game_min_age ON board_game(min_age);
 CREATE INDEX idx_board_game_max_age ON board_game(max_age);
 CREATE INDEX idx_board_game_description ON board_game(description);

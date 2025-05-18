@@ -40,6 +40,7 @@ public class BoardGameDtoCreate implements BoardGameDtoIn {
 
 	private Boolean isCooperative;
 	private Boolean canPlayOnlyOnce;
+	private Boolean isExtension = Boolean.FALSE;
 
 	// add language?
 	// link / picture?

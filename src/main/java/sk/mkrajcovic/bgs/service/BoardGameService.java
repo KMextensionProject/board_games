@@ -71,6 +71,7 @@ public class BoardGameService {
 		boardGame.setAuthors(findOrCreateAuthors(dtoIn.getAuthors()));
 		boardGame.setCanPlayOnlyOnce(dtoIn.getCanPlayOnlyOnce());
 		boardGame.setIsCooperative(dtoIn.getIsCooperative());
+		boardGame.setIsExtension(dtoIn.getIsExtension());
 	}
 
 	private Set<Author> findOrCreateAuthors(Set<String> inputAuthors) {

@@ -51,6 +51,9 @@ public class BoardGameDtoUpdate implements BoardGameDtoIn {
 	private Boolean canPlayOnlyOnce;
 
 	@NotNull
+	private Boolean isExtension;
+
+	@NotNull
 	@PositiveOrZero
 	private Long version;
 

@@ -40,6 +40,9 @@ public class BoardGame extends BaseEntity {
 	private Boolean isCooperative;
 	private Boolean canPlayOnlyOnce;
 
+	@Column(nullable = false)
+	private Boolean isExtension;
+
 	@Embedded
 	private AgeRange ageRange;
 
