@@ -35,20 +35,22 @@ public interface BoardGameApi {
 				schema = @Schema(implementation = BoardGameDtoCreate.class),
 				examples = @ExampleObject(value = """
 					{
-						"title": "EXIT - Návrat do opuštěné chaty",
-						"description": "Hra je v úrovni \\"Pokročilý\\"",
+						"title": "Bandido",
+						"description": "Zahraj kartu na zablokovanie všetkých únikov. Ak je bandido zablokovaný, tak ste spoločne vyhrali.",
+						"tutorialUrl": "https://www.youtube.com/watch?v=ymkGBJdfclc",
 						"minPlayers": 1,
 						"maxPlayers": 4,
-						"estimatedPlayTime": 120,
+						"estimatedPlayTime": 15,
 						"ageRange": {
-							"minAge": 12
+							"minAge": 6,
+							"maxAge": 99
 						},
 						"authors": [
-							"Inka Brand",
-							"Markus Brand"
+							"Martin Nedergaard Andersen"
 						],
 						"isCooperative": true,
-						"canPlayOnlyOnce": true
+						"canPlayOnlyOnce": false,
+						"isExtension": false
 					}
 				""")
 			)

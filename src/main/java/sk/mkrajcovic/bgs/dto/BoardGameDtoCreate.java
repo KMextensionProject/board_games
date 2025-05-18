@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import sk.mkrajcovic.bgs.web.YouTubeUrl;
 
 @Getter
 public class BoardGameDtoCreate implements BoardGameDtoIn {
@@ -37,6 +38,10 @@ public class BoardGameDtoCreate implements BoardGameDtoIn {
 
 	@Size(max = 10)
 	private Set<@NotBlank @Size(max = 100) String> authors = new HashSet<>(10);
+
+	@Size(max = 120)
+	@YouTubeUrl(message = "The tutorial URL must be a valid YouTube link.")
+	private String tutorialUrl;
 
 	private Boolean isCooperative;
 	private Boolean canPlayOnlyOnce;

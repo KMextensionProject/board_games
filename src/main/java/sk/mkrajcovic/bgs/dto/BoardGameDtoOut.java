@@ -17,6 +17,7 @@ public class BoardGameDtoOut {
 
 	private String title;
 	private String description;
+	private String tutorialUrl;
 	private Integer minPlayers;
 	private Integer maxPlayers;
 	private Integer estimatedPlayTime;
@@ -26,6 +27,11 @@ public class BoardGameDtoOut {
 	private Boolean isCooperative;
 	private Boolean canPlayOnlyOnce;
 	private Boolean isExtension;
+
+	/*
+	 * 0x2^7, 1x2^6, 1x2^5, 0x2^4, 0x2^3, 1x2^2, 2x2^1, 0x2^0 
+	 * 01100110
+	 */	
 
 	public BoardGameDtoOut(BoardGame boardGame) {
 		if (boardGame == null) {
@@ -37,6 +43,7 @@ public class BoardGameDtoOut {
 		modifiedAt = boardGame.getModifiedAt();
 		title = boardGame.getTitle();
 		description = boardGame.getDescription();
+		tutorialUrl = boardGame.getTutorialUrl();
 		minPlayers = boardGame.getMinPlayers();
 		maxPlayers = boardGame.getMaxPlayers();
 		estimatedPlayTime = boardGame.getEstimatedPlayTime();

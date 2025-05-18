@@ -8,6 +8,7 @@ DROP INDEX IF EXISTS public.idx_board_game_max_age;
 DROP INDEX IF EXISTS public.idx_board_game_description;
 DROP INDEX IF EXISTS public.idx_board_game_title_normalized;
 DROP INDEX IF EXISTS public.idx_author_name_normalized;
+DROP INDEX IF EXISTS public.idx_tutorial_url;
 
 -- drop foreign key constraints and tables
 DROP TABLE IF EXISTS public.board_game CASCADE;
@@ -29,6 +30,7 @@ CREATE TABLE board_game (
     is_cooperative BOOLEAN,
     can_play_only_once BOOLEAN,
     is_extension BOOLEAN NOT NULL,
+    tutorial_url VARCHAR(120),
     version BIGINT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at TIMESTAMP
@@ -72,5 +74,6 @@ CREATE INDEX idx_board_game_max_age ON board_game(max_age);
 CREATE INDEX idx_board_game_description ON board_game(description);
 CREATE INDEX idx_author_name ON author(name);
 CREATE INDEX idx_author_name_normalized ON author(name_normalized);
+CREATE INDEX idx_tutorial_url ON board_game(tutorial_url);
 
 CREATE EXTENSION IF NOT EXISTS unaccent;

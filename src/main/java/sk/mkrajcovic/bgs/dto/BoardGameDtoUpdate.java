@@ -13,6 +13,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import sk.mkrajcovic.bgs.web.YouTubeUrl;
 
 @Getter
 public class BoardGameDtoUpdate implements BoardGameDtoIn {
@@ -21,9 +22,12 @@ public class BoardGameDtoUpdate implements BoardGameDtoIn {
 	@Size(max = 50)
 	private String title;
 
-	@NotBlank
 	@Size(max = 500)
 	private String description;
+
+	@Size(max = 120)
+	@YouTubeUrl
+	private String tutorialUrl;
 
 	@NotNull
 	@Positive
@@ -42,6 +46,7 @@ public class BoardGameDtoUpdate implements BoardGameDtoIn {
 	@Valid
 	private AgeRangeDtoUpdate ageRange;
 
+	@NotNull
 	@Size(min = 1, max = 10)
 	private Set<@NotBlank @Size(max = 100) String> authors = new HashSet<>(10);
 

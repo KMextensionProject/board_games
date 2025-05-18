@@ -34,6 +34,9 @@ public class BoardGame extends BaseEntity {
 	@Column(length = 500)
 	private String description;
 
+	@Column(length = 120)
+	private String tutorialUrl;
+
 	private Integer estimatedPlayTime;
 	private Integer minPlayers;
 	private Integer maxPlayers;

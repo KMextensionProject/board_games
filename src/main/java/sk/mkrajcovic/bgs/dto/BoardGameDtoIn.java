@@ -14,4 +14,5 @@ public interface BoardGameDtoIn {
 	Boolean getIsCooperative();
 	Boolean getCanPlayOnlyOnce();
 	Boolean getIsExtension();
+	String getTutorialUrl();
 }
