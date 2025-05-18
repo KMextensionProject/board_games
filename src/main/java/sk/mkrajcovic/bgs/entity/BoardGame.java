@@ -9,12 +9,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Version;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sk.mkrajcovic.bgs.utils.StringNormalizer;
 
 @Getter
 @Setter
@@ -47,13 +50,29 @@ public class BoardGame extends BaseEntity {
 		inverseJoinColumns = @JoinColumn(name = "author_id"))
 	private Set<Author> authors;
 
+	@Setter(AccessLevel.NONE)
+	@Getter(AccessLevel.NONE)
+	@Column(nullable = false)
+	private String titleNormalized;
+
 	@Getter
-	@Setter
 	@Embeddable
 	@NoArgsConstructor // for JPA
 	@AllArgsConstructor
 	public static class AgeRange {
 		private Integer minAge;
 		private Integer maxAge;
+	}
+
+	@PrePersist
+	protected void runPrePersistOperations() {
+		super.runPrePersistOperations();
+		titleNormalized = StringNormalizer.normalize(title);
+	}
+
+	@PreUpdate
+	protected void runPreUpdateOperations() {
+		super.runPreUpdateOperations();
+		titleNormalized = StringNormalizer.normalize(title);
 	}
 }

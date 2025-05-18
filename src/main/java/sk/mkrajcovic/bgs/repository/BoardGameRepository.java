@@ -19,14 +19,18 @@ public interface BoardGameRepository extends JpaRepository<BoardGame, Long> {
 		SELECT DISTINCT bg
 		FROM BoardGame bg
 		LEFT JOIN FETCH bg.authors a
-		WHERE (:#{#filter.title} IS NULL OR bg.title LIKE %:#{#filter.title}%)
+		WHERE (:#{#filter.title} IS NULL OR bg.titleNormalized LIKE %:#{#filter.title}%)
+		AND (:#{#filter.estimatedPlayTime} IS NULL OR bg.estimatedPlayTime = :#{#filter.estimatedPlayTime})
 		AND (:#{#filter.minPlayers} IS NULL OR bg.minPlayers = :#{#filter.minPlayers})
 		AND (:#{#filter.maxPlayers} IS NULL OR bg.maxPlayers = :#{#filter.maxPlayers})
-		AND (:#{#filter.estimatedPlayTime} IS NULL OR bg.estimatedPlayTime = :#{#filter.estimatedPlayTime})
+		AND (:#{#filter.minAge} IS NULL OR bg.ageRange.minAge = :#{#filter.minAge})
+		AND (:#{#filter.maxAge} IS NULL OR bg.ageRange.maxAge = :#{#filter.maxAge})
+		AND (:#{#filter.isCooperative} IS NULL OR bg.isCooperative = :#{#filter.isCooperative})
+		AND (:#{#filter.canPlayOnlyOnce} IS NULL OR bg.canPlayOnlyOnce = :#{#filter.canPlayOnlyOnce})
 		AND (:#{#filter.author} IS NULL OR EXISTS (
 			 SELECT 1
 			 FROM bg.authors a
-			 WHERE a.name LIKE %:#{#filter.author}%))
+			 WHERE a.nameNormalized LIKE %:#{#filter.author}%))
 		ORDER BY bg.id ASC""";
 
 	@Query(BOARD_GAME_SEARCH_QUERY)
@@ -43,9 +47,18 @@ public interface BoardGameRepository extends JpaRepository<BoardGame, Long> {
 	interface BoardGameSearchProjection {
 		Long getId();
 		String getTitle();
+		String getDescription();
+		Integer getEstimatedPlayTime();
 		Integer getMinPlayers();
 		Integer getMaxPlayers();
-		Integer getEstimatedPlayTime();
+		AgeRangeProjection getAgeRange();
 		List<AuthorSearchProjection> getAuthors();
+		Boolean getIsCooperative();
+		Boolean getCanPlayOnlyOnce();
+	}
+
+	interface AgeRangeProjection {
+		Integer getMinAge();
+		Integer getMaxAge();
 	}
 }

@@ -19,7 +19,7 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
 		SELECT a.id AS id,
 		       a.name AS name
 		FROM Author a
-		WHERE (:name IS NULL OR a.name LIKE %:name%)
+		WHERE (:name IS NULL OR a.nameNormalized LIKE %:name%)
 		ORDER BY a.name ASC""")
 	public List<AuthorSearchProjection> findAllAuthorsByName(String name);
 

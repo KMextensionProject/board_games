@@ -25,6 +25,7 @@ import sk.mkrajcovic.bgs.repository.AuthorRepository.AuthorSearchProjection;
 import sk.mkrajcovic.bgs.repository.BoardGameRepository;
 import sk.mkrajcovic.bgs.repository.BoardGameRepository.BoardGameSearchProjection;
 import sk.mkrajcovic.bgs.utils.EntityUtils;
+import sk.mkrajcovic.bgs.utils.StringNormalizer;
 import sk.mkrajcovic.bgs.utils.TypeMap;
 import sk.mkrajcovic.bgs.utils.XlsxUtils;
 import sk.mkrajcovic.bgs.web.MessageCodeConstants;
@@ -105,17 +106,24 @@ public class BoardGameService {
 		return EntityUtils.getExistingEntityById(boardGameRepository, id);
 	}
 
-	public List<BoardGameSearchProjection> searchBoardGames(BoardGameSearchCriteria searchCriteria) {
-		return boardGameRepository.getAllByParams(searchCriteria);
-	}
-
 	public void deleteBoardGame(Long id) {
 		var boardGame = EntityUtils.getExistingEntityById(boardGameRepository, id);
 		boardGameRepository.delete(boardGame);
 	}
 
+	public List<BoardGameSearchProjection> searchBoardGames(BoardGameSearchCriteria searchCriteria) {
+		normalizeSearchCriteria(searchCriteria);
+		return boardGameRepository.getAllByParams(searchCriteria);
+	}
+
+	private void normalizeSearchCriteria(BoardGameSearchCriteria searchCriteria) {
+		searchCriteria.setTitle(StringNormalizer.normalize(searchCriteria.getTitle()));
+		searchCriteria.setAuthor(StringNormalizer.normalize(searchCriteria.getAuthor()));
+	}
+
 	@Transactional(readOnly = true)
 	public void exportBoardGamesToXlsx(BoardGameSearchCriteria searchCriteria, HttpServletResponse response) {
+		normalizeSearchCriteria(searchCriteria);
 		try (Stream<TypeMap> boardGameStream = boardGameRepository.streamAllByParams(searchCriteria)
 				.map(this::convertToTypeMap)) {
 

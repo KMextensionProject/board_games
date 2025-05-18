@@ -8,9 +8,12 @@ import lombok.Setter;
 public class BoardGameSearchCriteria {
 
 	private String title;
+	private Integer estimatedPlayTime;
 	private Integer minPlayers;
 	private Integer maxPlayers;
-	private Integer estimatedPlayTime;
+	private Integer minAge;
+	private Integer maxAge;
+	private Boolean isCooperative;
+	private Boolean canPlayOnlyOnce;
 	private String author;
-
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import sk.mkrajcovic.bgs.repository.AuthorRepository;
 import sk.mkrajcovic.bgs.repository.AuthorRepository.AuthorSearchProjection;
+import sk.mkrajcovic.bgs.utils.StringNormalizer;
 
 @Service
 public class AuthorService {
@@ -17,6 +18,6 @@ public class AuthorService {
 	}
 
 	public List<AuthorSearchProjection> searchAuthors(String name) {
-		return authorRepository.findAllAuthorsByName(name);
+		return authorRepository.findAllAuthorsByName(StringNormalizer.normalize(name));
 	}
 }
