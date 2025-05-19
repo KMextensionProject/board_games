@@ -1,4 +1,4 @@
-package sk.mkrajcovic.bgs.web;
+package sk.mkrajcovic.bgs.web.validation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

@@ -13,9 +13,11 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
-import sk.mkrajcovic.bgs.web.YouTubeUrl;
+import sk.mkrajcovic.bgs.web.validation.MinMaxFields;
+import sk.mkrajcovic.bgs.web.validation.YouTubeUrl;
 
 @Getter
+@MinMaxFields(minField = "minPlayers", maxField = "maxPlayers")
 public class BoardGameDtoUpdate implements BoardGameDtoIn {
 
 	@NotBlank
@@ -63,7 +65,9 @@ public class BoardGameDtoUpdate implements BoardGameDtoIn {
 	private Long version;
 
 	@Getter
+	@MinMaxFields(minField = "minAge", maxField = "maxAge")
 	public static class AgeRangeDtoUpdate implements AgeRangeDtoIn {
+
 		@NotNull
 		@Min(3)
 		@Max(18)

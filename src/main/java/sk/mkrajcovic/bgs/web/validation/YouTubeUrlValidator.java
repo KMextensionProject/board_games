@@ -1,4 +1,4 @@
-package sk.mkrajcovic.bgs.web;
+package sk.mkrajcovic.bgs.web.validation;
 
 import java.util.regex.Pattern;
 
