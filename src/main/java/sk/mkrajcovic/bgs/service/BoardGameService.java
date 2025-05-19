@@ -23,7 +23,9 @@ import sk.mkrajcovic.bgs.entity.BoardGame;
 import sk.mkrajcovic.bgs.repository.AuthorRepository;
 import sk.mkrajcovic.bgs.repository.AuthorRepository.AuthorSearchProjection;
 import sk.mkrajcovic.bgs.repository.BoardGameRepository;
+import sk.mkrajcovic.bgs.repository.BoardGameRepository.AgeRangeProjection;
 import sk.mkrajcovic.bgs.repository.BoardGameRepository.BoardGameSearchProjection;
+import sk.mkrajcovic.bgs.utils.BooleanUtils;
 import sk.mkrajcovic.bgs.utils.EntityUtils;
 import sk.mkrajcovic.bgs.utils.StringNormalizer;
 import sk.mkrajcovic.bgs.utils.TypeMap;
@@ -144,13 +146,31 @@ public class BoardGameService {
 		return new TypeMap(
 			"id", boardGame.getId(),
 			"title", boardGame.getTitle(),
+			"description", boardGame.getDescription(),
 			"minPlayers", boardGame.getMinPlayers(),
 			"maxPlayers", boardGame.getMaxPlayers(),
+			"ageRange", getAgeRangeAsString(boardGame.getAgeRange()),
 			"playTime", boardGame.getEstimatedPlayTime(),
+			"isCooperative", BooleanUtils.toStringAnoNie(boardGame.getIsCooperative()),
+			"isExtension", BooleanUtils.toStringAnoNie(boardGame.getIsExtension()),
+			"isOneTimePlay", BooleanUtils.toStringAnoNie(boardGame.getCanPlayOnlyOnce()),
 			"authors", boardGame.getAuthors()
 				.stream()
 				.map(AuthorSearchProjection::getName)
 				.collect(Collectors.joining(", "))
 		);
+	}
+
+	private String getAgeRangeAsString(AgeRangeProjection ageRange) {
+		if (ageRange.getMinAge() == null) {
+			return null;
+		}
+		StringBuilder ageRangeStr = new StringBuilder("" + ageRange.getMinAge());
+		if (ageRange.getMaxAge() != null) {
+			ageRangeStr.append('-').append(ageRange.getMaxAge());
+		} else {
+			ageRangeStr.append('+');
+		}
+		return ageRangeStr.toString();
 	}
 }
