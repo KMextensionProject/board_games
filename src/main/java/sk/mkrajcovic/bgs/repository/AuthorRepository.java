@@ -16,8 +16,7 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
 	public Set<Author> findByNameIn(Collection<String> names);
 
 	@Query("""
-		SELECT a.id AS id,
-		       a.name AS name
+		SELECT a
 		FROM Author a
 		WHERE (:name IS NULL OR a.nameNormalized LIKE %:name%)
 		ORDER BY a.name ASC""")

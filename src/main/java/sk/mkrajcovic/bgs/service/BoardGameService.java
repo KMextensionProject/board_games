@@ -78,16 +78,26 @@ public class BoardGameService {
 	}
 
 	private Set<Author> findOrCreateAuthors(Set<String> inputAuthors) {
-		// normalize author names from input
+		Set<String> authorNames = trimAuthorNames(inputAuthors);
+		Set<Author> authorsFromDb = new HashSet<>(authorRepository.findByNameIn(authorNames));
+		Set<Author> newAuthors = identifyAuthorsToCreate(authorNames, authorsFromDb);
+
+		if (!newAuthors.isEmpty()) {
+			authorRepository.saveAll(newAuthors);
+			authorsFromDb.addAll(newAuthors);
+		}
+		return authorsFromDb;
+	}
+
+	private Set<String> trimAuthorNames(Set<String> inputAuthors) {
 		Set<String> authorNames = new HashSet<>(10);
 		inputAuthors.forEach(authorName -> authorNames.add(authorName.trim()));
+		return authorNames;
+	}
 
-		Set<Author> authorsFromDb = new HashSet<>(authorRepository.findByNameIn(authorNames));
-
-		// identify new authors to be created
+	private Set<Author> identifyAuthorsToCreate(Set<String> authorNames, Set<Author> authorsFromDb) {
 		Set<Author> authorsToBeCreated = new HashSet<>();
 		for (String authorName : authorNames) {
-
 			boolean saveAuthor = authorsFromDb.stream()
 				.noneMatch(author -> author.getName().equals(authorName));
 
@@ -97,13 +107,7 @@ public class BoardGameService {
 				authorsToBeCreated.add(newAuthor);
 			}
 		}
-
-		if (!authorsToBeCreated.isEmpty()) {
-			authorRepository.saveAll(authorsToBeCreated);
-			authorsFromDb.addAll(authorsToBeCreated);
-		}
-
-		return authorsFromDb;
+		return authorsToBeCreated;
 	}
 
 	public BoardGame getBoardGame(Long id) {
@@ -118,11 +122,6 @@ public class BoardGameService {
 	public List<BoardGameSearchProjection> searchBoardGames(BoardGameSearchCriteria searchCriteria) {
 		normalizeSearchCriteria(searchCriteria);
 		return boardGameRepository.getAllByParams(searchCriteria);
-	}
-
-	private void normalizeSearchCriteria(BoardGameSearchCriteria searchCriteria) {
-		searchCriteria.setTitle(StringNormalizer.normalize(searchCriteria.getTitle()));
-		searchCriteria.setAuthor(StringNormalizer.normalize(searchCriteria.getAuthor()));
 	}
 
 	@Transactional(readOnly = true)
@@ -140,6 +139,11 @@ public class BoardGameService {
 		} catch (IOException ioex) {
 			throw new InfrastructureException(MessageCodeConstants.ERROR, ioex);
 		}
+	}
+
+	private void normalizeSearchCriteria(BoardGameSearchCriteria searchCriteria) {
+		searchCriteria.setTitle(StringNormalizer.normalize(searchCriteria.getTitle()));
+		searchCriteria.setAuthor(StringNormalizer.normalize(searchCriteria.getAuthor()));
 	}
 
 	private TypeMap convertToTypeMap(BoardGameSearchProjection boardGame) {

@@ -14,16 +14,16 @@ import jakarta.servlet.http.HttpServletRequestWrapper;
 public class BufferedRequestWrapper extends HttpServletRequestWrapper {
 
 	private final byte[] buffer;
-	private final ByteArrayInputStream byteArrayInputStream;
 
 	public BufferedRequestWrapper(HttpServletRequest request) throws IOException {
 		super(request);
 		buffer = StreamUtils.copyToByteArray(request.getInputStream());
-		this.byteArrayInputStream = new ByteArrayInputStream(buffer);
 	}
 
 	@Override
 	public ServletInputStream getInputStream() {
+		var byteArrayInputStream = new ByteArrayInputStream(buffer);
+
 		return new ServletInputStream() {
 			@Override
 			public boolean isReady() {
@@ -41,8 +41,7 @@ public class BufferedRequestWrapper extends HttpServletRequestWrapper {
 			}
 
 			@Override
-			public void setReadListener(ReadListener listener) {
-			}
+			public void setReadListener(ReadListener listener) {}
 		};
 	}
 
