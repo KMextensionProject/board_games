@@ -57,7 +57,7 @@ public class BoardGameController implements BoardGameApi {
 
 	@GetMapping(path = "/boardGame/", produces = APPLICATION_JSON_VALUE)
 	public List<BoardGameSearchProjection> listBoardGames(@ModelAttribute BoardGameSearchCriteria searchCriteria) {
-		return service.searchBoardGames(searchCriteria); // add ignorecase searching (tl fields)
+		return service.searchBoardGames(searchCriteria);
 	}
 
 	@DeleteMapping("/boardGame/{id}")

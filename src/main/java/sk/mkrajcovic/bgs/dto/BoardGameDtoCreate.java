@@ -20,10 +20,10 @@ public class BoardGameDtoCreate implements BoardGameDtoIn {
 
 	@NotBlank
 	@Size(max = 50)
-	private String title;
+	private String title; // trim this
 
 	@Size(max = 500)
-	private String description;
+	private String description; // trim this
 
 	@Positive
 	private Integer minPlayers;
@@ -43,7 +43,7 @@ public class BoardGameDtoCreate implements BoardGameDtoIn {
 
 	@Size(max = 120)
 	@YouTubeUrl(message = "The tutorial URL must be a valid YouTube link.")
-	private String tutorialUrl;
+	private String tutorialUrl; // trim this
 
 	private Boolean isCooperative;
 	private Boolean canPlayOnlyOnce;

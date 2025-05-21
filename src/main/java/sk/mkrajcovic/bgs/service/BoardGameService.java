@@ -91,7 +91,8 @@ public class BoardGameService {
 
 	private Set<String> trimAuthorNames(Set<String> inputAuthors) {
 		Set<String> authorNames = new HashSet<>(10);
-		inputAuthors.forEach(authorName -> authorNames.add(authorName.trim()));
+		// we should not rely on the controller validations, this may be called by other services as well !
+		inputAuthors.forEach(authorName -> authorNames.add(authorName.trim())); // FIXME: possible NPE
 		return authorNames;
 	}
 
@@ -150,7 +151,6 @@ public class BoardGameService {
 		return new TypeMap(
 			"id", boardGame.getId(),
 			"title", boardGame.getTitle(),
-			"description", boardGame.getDescription(),
 			"minPlayers", boardGame.getMinPlayers(),
 			"maxPlayers", boardGame.getMaxPlayers(),
 			"ageRange", getAgeRangeAsString(boardGame.getAgeRange()),
@@ -158,6 +158,7 @@ public class BoardGameService {
 			"isCooperative", BooleanUtils.toStringAnoNie(boardGame.getIsCooperative()),
 			"isExtension", BooleanUtils.toStringAnoNie(boardGame.getIsExtension()),
 			"isOneTimePlay", BooleanUtils.toStringAnoNie(boardGame.getCanPlayOnlyOnce()),
+			"tutorialUrl", boardGame.getTutorialUrl(),
 			"authors", boardGame.getAuthors()
 				.stream()
 				.map(AuthorSearchProjection::getName)

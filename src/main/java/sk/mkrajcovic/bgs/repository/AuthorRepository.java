@@ -26,5 +26,4 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
 		Long getId();
 		String getName();
 	}
-
 }

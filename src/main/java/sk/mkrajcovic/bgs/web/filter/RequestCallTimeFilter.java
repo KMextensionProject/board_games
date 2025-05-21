@@ -5,6 +5,8 @@ import java.io.IOException;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -17,6 +19,7 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Component
+@Order(Ordered.HIGHEST_PRECEDENCE - 100)
 public class RequestCallTimeFilter implements Filter {
 
 	private static final Logger LOG = LoggerFactory.getLogger(RequestCallTimeFilter.class);

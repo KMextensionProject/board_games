@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import sk.mkrajcovic.bgs.dto.BoardGameSearchCriteria;
 import sk.mkrajcovic.bgs.entity.BoardGame;
 import sk.mkrajcovic.bgs.repository.AuthorRepository.AuthorSearchProjection;
@@ -32,7 +34,7 @@ public interface BoardGameRepository extends JpaRepository<BoardGame, Long> {
 			 SELECT 1
 			 FROM bg.authors a
 			 WHERE a.nameNormalized LIKE %:#{#filter.author}%))
-		ORDER BY bg.id ASC""";
+		ORDER BY bg.title ASC""";
 
 	@Query(BOARD_GAME_SEARCH_QUERY)
 	public List<BoardGameSearchProjection> getAllByParams(
@@ -48,15 +50,23 @@ public interface BoardGameRepository extends JpaRepository<BoardGame, Long> {
 	interface BoardGameSearchProjection {
 		Long getId();
 		String getTitle();
-		String getDescription();
 		Integer getEstimatedPlayTime();
 		Integer getMinPlayers();
 		Integer getMaxPlayers();
 		AgeRangeProjection getAgeRange();
+		/*
+		 * Since create/update operations rely only on author names, it would be ideal
+		 * to return a List<String> of names here, excluding IDs. However, this isn't
+		 * directly achievable with interface-based projections. Consider introducing a
+		 * separate DTO.
+		 */
 		List<AuthorSearchProjection> getAuthors();
 		Boolean getIsCooperative();
 		Boolean getCanPlayOnlyOnce();
 		Boolean getIsExtension();
+
+		@JsonIgnore
+		String getTutorialUrl();
 	}
 
 	interface AgeRangeProjection {
