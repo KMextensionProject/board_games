@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import sk.mkrajcovic.bgs.api.AuthorApi;
-import sk.mkrajcovic.bgs.repository.AuthorRepository.AuthorSearchProjection;
 import sk.mkrajcovic.bgs.service.AuthorService;
 
 @RestController
@@ -21,7 +20,7 @@ public class AuthorController implements AuthorApi {
 	}
 
 	@GetMapping(path = "/author/", produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<AuthorSearchProjection> listAuthors(@RequestParam(required = false) String name) {
+	public List<String> listAuthors(@RequestParam(required = false) String name) {
 		return authorService.searchAuthors(name);
 	}
 
