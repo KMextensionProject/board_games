@@ -8,11 +8,16 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,56 +27,76 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+@ConditionalOnProperty(name = "bgs.request-logging.enabled", havingValue = "true")
 @Component
-@Order(Ordered.HIGHEST_PRECEDENCE - 100)
-class RequestLoggingFilter extends OncePerRequestFilter {
+@Order(Ordered.HIGHEST_PRECEDENCE - 10)
+public class RequestLoggingFilter extends OncePerRequestFilter {
 
+	private static final Logger LOG = LoggerFactory.getLogger(RequestLoggingFilter.class);
 	private static final List<HttpMethod> SUPPORTED_HTTP_METHODS = List.of(POST, PUT, PATCH);
 
 	private final ObjectMapper jsonMapper;
+	private final List<String> excludedPaths;
+	private final AntPathMatcher pathMatcher;
 
-	RequestLoggingFilter(final ObjectMapper objectMapper) {
-		this.jsonMapper = objectMapper;
+	RequestLoggingFilter(final ObjectMapper objectMapper, @Value("${bgs.request-logging.exclude-paths:#{null}}") List<String> pathsToExclude) {
+		LOG.info("Initializing request logging for HTTP methods {}", SUPPORTED_HTTP_METHODS);
+		jsonMapper = objectMapper;
+		excludedPaths = initExcludedPaths(pathsToExclude);
+		pathMatcher = new AntPathMatcher();
+	}
+
+	private List<String> initExcludedPaths(List<String> pathsToExclude) {
+		if (pathsToExclude == null || pathsToExclude.isEmpty()) {
+			LOG.warn("No exclude-paths configured. All incoming JSON payloads will be logged.");
+			return List.of();
+		}
+		List<String> excludedPaths = List.copyOf(pathsToExclude);
+		LOG.info("Excluding logging for the following paths: {}", excludedPaths);
+		return excludedPaths;
 	}
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 		if (shouldLog(request)) {
 			var requestWrapper = new BufferedRequestWrapper(request);
-			logRequest(requestWrapper);
+			logIncomingRequest(requestWrapper);
 			request = requestWrapper;
 		}
 		filterChain.doFilter(request, response);
 	}
 
-	private boolean shouldLog(HttpServletRequest request) {
+	protected boolean shouldLog(HttpServletRequest request) {
+		String requestUri = request.getRequestURI()
+			.substring(request.getContextPath().length());
+
 		return logger.isDebugEnabled()
-			&& MediaType.APPLICATION_JSON_VALUE.equalsIgnoreCase(request.getContentType())
-			&& SUPPORTED_HTTP_METHODS.contains(HttpMethod.valueOf(request.getMethod()));
-		// uri patterns
+			&& SUPPORTED_HTTP_METHODS.contains(HttpMethod.valueOf(request.getMethod()))
+			&& MediaType.APPLICATION_JSON_VALUE.equals(request.getContentType())
+			&& excludedPaths.stream()
+				.noneMatch(antPath -> pathMatcher.match(antPath, requestUri));
 	}
 
-	private void logRequest(BufferedRequestWrapper request) {
-		StringBuilder message = new StringBuilder(request.getMethod())
-			.append(": ")
+	private void logIncomingRequest(BufferedRequestWrapper request) {
+		StringBuilder message = new StringBuilder(250)
+			.append(request.getMethod()).append(": ")
 			.append(request.getRequestURI());
 
 		if (!StringUtils.isBlank(request.getQueryString())) {
 			message.append('?').append(request.getQueryString());
 		}
-
 		message.append(", ").append(compactJsonSafely(request.getRequestBody()));
 		logger.debug(message);
 	}
 
-	private String compactJsonSafely(String jsonPayload) {
-		if (StringUtils.isBlank(jsonPayload)) {
+    private String compactJsonSafely(String input) {
+		if (StringUtils.isBlank(input)) {
 			return "<no payload>";
 		}
 		try {
-			Object json = jsonMapper.readValue(jsonPayload, Object.class);
+			Object json = jsonMapper.readValue(input, Object.class);
 			return jsonMapper.writeValueAsString(json);
-		} catch (IOException ex) {
+		} catch (Exception e) {
 			return "<non-json payload>";
 		}
 	}

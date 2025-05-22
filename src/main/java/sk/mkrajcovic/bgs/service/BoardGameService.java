@@ -1,12 +1,15 @@
 package sk.mkrajcovic.bgs.service;
 
+import static java.util.stream.Collectors.joining;
+import static sk.mkrajcovic.bgs.utils.BooleanUtils.ANO;
+import static sk.mkrajcovic.bgs.utils.BooleanUtils.NIE;
+import static sk.mkrajcovic.bgs.utils.BooleanUtils.toStringAnoNie;
 import static sk.mkrajcovic.bgs.utils.FileNameGenerator.generateFileNameWithTimestamp;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
@@ -21,11 +24,10 @@ import sk.mkrajcovic.bgs.dto.BoardGameSearchCriteria;
 import sk.mkrajcovic.bgs.entity.Author;
 import sk.mkrajcovic.bgs.entity.BoardGame;
 import sk.mkrajcovic.bgs.repository.AuthorRepository;
-import sk.mkrajcovic.bgs.repository.AuthorRepository.AuthorSearchProjection;
 import sk.mkrajcovic.bgs.repository.BoardGameRepository;
 import sk.mkrajcovic.bgs.repository.BoardGameRepository.AgeRangeProjection;
+import sk.mkrajcovic.bgs.repository.BoardGameRepository.AuthorProjection;
 import sk.mkrajcovic.bgs.repository.BoardGameRepository.BoardGameSearchProjection;
-import sk.mkrajcovic.bgs.utils.BooleanUtils;
 import sk.mkrajcovic.bgs.utils.EntityUtils;
 import sk.mkrajcovic.bgs.utils.StringNormalizer;
 import sk.mkrajcovic.bgs.utils.TypeMap;
@@ -40,12 +42,9 @@ public class BoardGameService {
 	private final BoardGameRepository boardGameRepository;
 	private final AuthorRepository authorRepository;
 
-	public BoardGameService(
-			final BoardGameRepository boardGameRepository,
-			final AuthorRepository authorRepository) {
-
-		this.boardGameRepository = boardGameRepository;
-		this.authorRepository = authorRepository;
+	public BoardGameService(final BoardGameRepository boardGameRepo, final AuthorRepository authorRepo) {
+		boardGameRepository = boardGameRepo;
+		authorRepository = authorRepo;
 	}
 
 	@Transactional
@@ -91,8 +90,7 @@ public class BoardGameService {
 
 	private Set<String> trimAuthorNames(Set<String> inputAuthors) {
 		Set<String> authorNames = new HashSet<>(10);
-		// we should not rely on the controller validations, this may be called by other services as well !
-		inputAuthors.forEach(authorName -> authorNames.add(authorName.trim())); // FIXME: possible NPE
+		inputAuthors.forEach(authorName -> authorNames.add(authorName.trim()));
 		return authorNames;
 	}
 
@@ -129,6 +127,7 @@ public class BoardGameService {
 	public void exportBoardGamesToXlsx(BoardGameSearchCriteria searchCriteria, HttpServletResponse response) {
 		normalizeSearchCriteria(searchCriteria);
 		try (Stream<TypeMap> boardGameStream = boardGameRepository.streamAllByParams(searchCriteria)
+				// to avoid reflection
 				.map(this::convertToTypeMap)) {
 
 			XlsxUtils.generateXlsx(
@@ -155,14 +154,13 @@ public class BoardGameService {
 			"maxPlayers", boardGame.getMaxPlayers(),
 			"ageRange", getAgeRangeAsString(boardGame.getAgeRange()),
 			"playTime", boardGame.getEstimatedPlayTime(),
-			"isCooperative", BooleanUtils.toStringAnoNie(boardGame.getIsCooperative()),
-			"isExtension", BooleanUtils.toStringAnoNie(boardGame.getIsExtension()),
-			"isOneTimePlay", BooleanUtils.toStringAnoNie(boardGame.getCanPlayOnlyOnce()),
+			"isCooperative", toStringAnoNie(boardGame.getIsCooperative(), (ANO + " aj " + NIE)),
+			"isExtension", toStringAnoNie(boardGame.getIsExtension()),
+			"isOneTimePlay", toStringAnoNie(boardGame.getCanPlayOnlyOnce()),
 			"tutorialUrl", boardGame.getTutorialUrl(),
-			"authors", boardGame.getAuthors()
-				.stream()
-				.map(AuthorSearchProjection::getName)
-				.collect(Collectors.joining(", "))
+			"authors", boardGame.getAuthors().stream()
+				.map(AuthorProjection::getName)
+				.collect(joining(", "))
 		);
 	}
 

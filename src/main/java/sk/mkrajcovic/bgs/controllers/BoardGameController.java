@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.servlet.http.HttpServletResponse;
 import sk.mkrajcovic.bgs.api.BoardGameApi;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoCreate;
+import sk.mkrajcovic.bgs.dto.BoardGameDtoFindOut;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoOut;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoUpdate;
 import sk.mkrajcovic.bgs.dto.BoardGameSearchCriteria;
-import sk.mkrajcovic.bgs.repository.BoardGameRepository.BoardGameSearchProjection;
 import sk.mkrajcovic.bgs.service.BoardGameService;
 import sk.mkrajcovic.bgs.utils.ValidationUtils;
 import sk.mkrajcovic.bgs.web.filter.CreatedResponseEntity;
@@ -56,8 +56,10 @@ public class BoardGameController implements BoardGameApi {
 	}
 
 	@GetMapping(path = "/boardGame/", produces = APPLICATION_JSON_VALUE)
-	public List<BoardGameSearchProjection> listBoardGames(@ModelAttribute BoardGameSearchCriteria searchCriteria) {
-		return service.searchBoardGames(searchCriteria);
+	public List<BoardGameDtoFindOut> listBoardGames(@ModelAttribute BoardGameSearchCriteria searchCriteria) {
+		return service.searchBoardGames(searchCriteria).stream()
+			.map(BoardGameDtoFindOut::new)
+			.toList();
 	}
 
 	@DeleteMapping("/boardGame/{id}")

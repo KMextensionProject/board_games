@@ -18,10 +18,10 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoCreate;
+import sk.mkrajcovic.bgs.dto.BoardGameDtoFindOut;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoOut;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoUpdate;
 import sk.mkrajcovic.bgs.dto.BoardGameSearchCriteria;
-import sk.mkrajcovic.bgs.repository.BoardGameRepository.BoardGameSearchProjection;
 
 @Tag(name = "Board Game")
 public interface BoardGameApi {
@@ -74,7 +74,7 @@ public interface BoardGameApi {
 	@Operation(
 		summary = "Retrieve a full list of board games based on search criteria"
 	)
-	public List<BoardGameSearchProjection> listBoardGames(BoardGameSearchCriteria searchCriteria);
+	public List<BoardGameDtoFindOut> listBoardGames(BoardGameSearchCriteria searchCriteria);
 
 	@Operation(summary = "Delete a board game")
 	public void deleteBoardGame(@NotNull @Positive Long id);
