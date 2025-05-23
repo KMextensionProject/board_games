@@ -1,5 +1,19 @@
-{"properties": [{
-  "name": "bgs.exception.display-stack-trace",
-  "type": "boolean",
-  "description": "Whether to provide a stack trace in errors - useful for testing/debugging purposes on non-production environments. Fefault is `false`"
-}]}
+{
+	"properties": [
+		{
+			"name": "bgs.exception.display-stack-trace",
+			"type": "boolean",
+			"description": "Whether to provide a stack trace in errors - useful for testing/debugging purposes on non-production environments. Fefault is `false`"
+		},
+		{
+			"name": "bgs.request-logging.enabled",
+			"type": "boolean",
+			"description": "Whether to turn on/off the incoming request payload logging for application controllers. Defaults to `false`"
+		},
+		{
+			"name": "bgs.request-logging.exclude-paths",
+			"type": "java.lang.String",
+			"description": "A coma-separated value of AntPathMatcher URI patterns which should be excluded from logging. By default all requests will be logged."
+		}
+	]
+}
