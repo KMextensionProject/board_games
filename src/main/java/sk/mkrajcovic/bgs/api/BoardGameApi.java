@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -27,6 +28,7 @@ import sk.mkrajcovic.bgs.dto.BoardGameSearchCriteria;
 public interface BoardGameApi {
 
 	@Operation(
+		security = @SecurityRequirement(name = "bearerAuth"),
 		summary = "Create a new board game",
 		requestBody = @RequestBody(
 			required = true,
@@ -64,7 +66,9 @@ public interface BoardGameApi {
 	@Operation(summary = "Retrieve detailed information about board game by its ID")
 	public BoardGameDtoOut getBoardGame(@NotNull @Positive Long id);
 
-	@Operation(summary = "Update an existing board game")
+	@Operation(
+		security = @SecurityRequirement(name = "bearerAuth"),
+		summary = "Update an existing board game")
 	public BoardGameDtoOut updateBoardGame(
 		@NotNull @Positive Long id,
 		@Valid BoardGameDtoUpdate updateDto,
@@ -76,7 +80,9 @@ public interface BoardGameApi {
 	)
 	public List<BoardGameDtoFindOut> listBoardGames(BoardGameSearchCriteria searchCriteria);
 
-	@Operation(summary = "Delete a board game")
+	@Operation(
+		security = @SecurityRequirement(name = "bearerAuth"),
+		summary = "Delete a board game")
 	public void deleteBoardGame(@NotNull @Positive Long id);
 
 	@Operation(summary = "Export list of board games into XLSX file based on search criteria")

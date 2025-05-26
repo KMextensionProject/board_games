@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.servlet.http.HttpServletResponse;
+import static sk.mkrajcovic.bgs.UserRoles.*;
 import sk.mkrajcovic.bgs.api.BoardGameApi;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoCreate;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoFindOut;
@@ -37,6 +39,7 @@ public class BoardGameController implements BoardGameApi {
 		this.service = service;
 	}
 
+	@RolesAllowed({BGS_TESTER, BGS_ADMIN})
 	@PostMapping(path = "/boardGame", consumes = APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> createBoardGame(@RequestBody BoardGameDtoCreate createDto, BindingResult bindingResult) {
 		ValidationUtils.processFieldBindingErrors(bindingResult.getFieldErrors());
@@ -44,6 +47,7 @@ public class BoardGameController implements BoardGameApi {
 		return CreatedResponseEntity.create("/boardGame/{id}", id);
 	}
 
+	@RolesAllowed({BGS_TESTER, BGS_ADMIN})
 	@PutMapping(path = "/boardGame/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 	public BoardGameDtoOut updateBoardGame(@PathVariable Long id, @RequestBody BoardGameDtoUpdate updateDto, BindingResult bindingResult) {
 		ValidationUtils.processFieldBindingErrors(bindingResult.getFieldErrors());
@@ -62,6 +66,7 @@ public class BoardGameController implements BoardGameApi {
 			.toList();
 	}
 
+	@RolesAllowed({BGS_TESTER, BGS_ADMIN})
 	@DeleteMapping("/boardGame/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteBoardGame(@PathVariable Long id) {
