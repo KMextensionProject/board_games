@@ -7,6 +7,10 @@ DROP INDEX IF EXISTS public.idx_board_game_min_age;
 DROP INDEX IF EXISTS public.idx_board_game_max_age;
 DROP INDEX IF EXISTS public.idx_board_game_description;
 DROP INDEX IF EXISTS public.idx_board_game_title_normalized;
+DROP INDEX IF EXISTS public.idx_board_game_created_at;
+DROP INDEX IF EXISTS public.idx_board_game_modified_at;
+DROP INDEX IF EXISTS public.idx_board_game_created_by;
+DROP INDEX IF EXISTS public.idx_board_game_modified_by;
 DROP INDEX IF EXISTS public.idx_author_name_normalized;
 DROP INDEX IF EXISTS public.idx_tutorial_url;
 
@@ -34,7 +38,8 @@ CREATE TABLE board_game (
     version BIGINT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at TIMESTAMP,
-    created_by VARCHAR(50) DEFAULT 'System'
+    created_by VARCHAR(50),
+    modified_by VARCHAR(50)
 );
 CREATE TABLE author (
     id BIGSERIAL PRIMARY KEY,
@@ -42,7 +47,8 @@ CREATE TABLE author (
     name_normalized VARCHAR(50) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at TIMESTAMP,
-    created_by VARCHAR(50) DEFAULT 'System'
+    created_by VARCHAR(50),
+    modified_by VARCHAR(50)
 );
 CREATE TABLE board_game_author (
     board_game_id BIGINT REFERENCES board_game(id) ON DELETE CASCADE,
@@ -53,7 +59,8 @@ CREATE TABLE borrower (
     id BIGSERIAL PRIMARY KEY,
 	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at TIMESTAMP,
-    created_by VARCHAR(50) DEFAULT 'System',
+    created_by VARCHAR(50),
+    modified_by VARCHAR(50),
     name VARCHAR(50) NOT NULL,
     email VARCHAR(50)
 );
@@ -61,7 +68,8 @@ CREATE TABLE lend_log (
     id BIGSERIAL PRIMARY KEY,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at TIMESTAMP,
-    created_by VARCHAR(50) DEFAULT 'System',
+    created_by VARCHAR(50),
+    modified_by VARCHAR(50),
     board_game_id BIGINT REFERENCES board_game(id) ON DELETE CASCADE,
     borrower_id BIGINT REFERENCES borrower(id) ON DELETE SET NULL,
     lend_date DATE NOT NULL DEFAULT NOW(),
@@ -76,6 +84,10 @@ CREATE INDEX idx_board_game_estimated_play_time ON board_game(estimated_play_tim
 CREATE INDEX idx_board_game_min_age ON board_game(min_age);
 CREATE INDEX idx_board_game_max_age ON board_game(max_age);
 CREATE INDEX idx_board_game_description ON board_game(description);
+CREATE INDEX idx_board_game_created_at ON board_game(created_at);
+CREATE INDEX idx_board_game_modified_at ON board_game(modified_at);
+CREATE INDEX idx_board_game_created_by ON board_game(created_by);
+CREATE INDEX idx_board_game_modified_by ON board_game(modified_by);
 CREATE INDEX idx_author_name ON author(name);
 CREATE INDEX idx_author_name_normalized ON author(name_normalized);
 CREATE INDEX idx_tutorial_url ON board_game(tutorial_url);

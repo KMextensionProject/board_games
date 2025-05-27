@@ -92,11 +92,24 @@ public class BoardGameService {
 		boardGame.setMaxPlayers(dtoIn.getMaxPlayers());
 		boardGame.setEstimatedPlayTime(dtoIn.getEstimatedPlayTime());
 		boardGame.setAgeRange(dtoIn.getAgeRange().asEntity());
-		boardGame.setAuthors(findOrCreateAuthors(dtoIn.getAuthors()));
 		boardGame.setCanPlayOnlyOnce(dtoIn.getCanPlayOnlyOnce());
 		boardGame.setIsCooperative(dtoIn.getIsCooperative());
 		boardGame.setIsExtension(dtoIn.getIsExtension());
 		boardGame.setTutorialUrl(dtoIn.getTutorialUrl());
+		/*
+		 * Avoid detection of false-positive dirty checks in Hibernate.
+		 *
+		 * Replacing the entire 'authors' collection will be detected
+		 * as a change, causing it to treat the entity as modified,
+		 * even if no actual updates have occurred.
+		 *
+		 * This leads to unnecessary delete/insert operations on the
+		 * 'board_game_author' join table.
+		 */
+		Set<Author> authorsFromDb = findOrCreateAuthors(dtoIn.getAuthors());
+		if (!authorsFromDb.equals(boardGame.getAuthors())) {
+			boardGame.setAuthors(authorsFromDb);
+		}
 	}
 
 	private Set<Author> findOrCreateAuthors(Set<String> inputAuthors) {

@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PrePersist;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import sk.mkrajcovic.bgs.utils.StringNormalizer;
@@ -14,8 +15,10 @@ import sk.mkrajcovic.bgs.utils.StringNormalizer;
 @Getter
 @Setter
 @Entity
+@EqualsAndHashCode(callSuper = false)
 public class Author extends BaseEntity {
 
+	@EqualsAndHashCode.Include
 	@Column(nullable = false, length = 100, unique = true)
 	private String name;
 
@@ -29,7 +32,6 @@ public class Author extends BaseEntity {
 
 	@PrePersist
 	protected void runPrePersistOperations() {
-		super.runPrePersistOperations();
 		nameNormalized = StringNormalizer.normalize(name);
 	}
 }
