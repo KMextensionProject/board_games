@@ -45,7 +45,6 @@ public class SecurityConfig {
         http.exceptionHandling(exh -> exh.authenticationEntryPoint((request, response, authException) -> {
             response.addHeader(HttpHeaders.WWW_AUTHENTICATE, "Bearer realm=\"confidential\"");
             response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
-			LOG.error("Not authorized", authException);
         }));
 
         // If SSL enabled, disable http (https only)

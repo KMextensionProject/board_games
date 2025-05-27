@@ -31,7 +31,7 @@ import sk.mkrajcovic.bgs.utils.ValidationUtils;
 import sk.mkrajcovic.bgs.web.filter.CreatedResponseEntity;
 
 @RestController
-public class BoardGameController implements BoardGameApi {
+class BoardGameController implements BoardGameApi {
 
 	private final BoardGameService service;
 

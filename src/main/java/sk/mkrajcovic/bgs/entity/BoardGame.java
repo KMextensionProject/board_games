@@ -71,12 +71,14 @@ public class BoardGame extends BaseEntity {
 	}
 
 	@PrePersist
+	@Override
 	protected void runPrePersistOperations() {
 		super.runPrePersistOperations();
 		titleNormalized = StringNormalizer.normalize(title);
 	}
 
 	@PreUpdate
+	@Override
 	protected void runPreUpdateOperations() {
 		super.runPreUpdateOperations();
 		titleNormalized = StringNormalizer.normalize(title);

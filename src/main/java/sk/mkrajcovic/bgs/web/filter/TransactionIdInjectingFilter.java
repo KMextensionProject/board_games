@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class TransactionIdInjectingFilter implements Filter {
+class TransactionIdInjectingFilter implements Filter {
 
 	public static final String TRANSACTION_ID = "TransactionId";
 

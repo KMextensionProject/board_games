@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 public class StringNormalizer {
 
 	private StringNormalizer() {
-		throw new IllegalStateException("This class was not designed to be instantiated");
+		throw new UnsupportedOperationException("This class was not designed to be instantiated");
 	}
 
     /**

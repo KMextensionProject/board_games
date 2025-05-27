@@ -13,7 +13,7 @@ public class AuditPrincipalProvider implements AuditorAware<String> {
 	@Override
 	public Optional<String> getCurrentAuditor() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		// there is no authentication in scheduled tasks
+		// there is no authentication in scheduled tasks/non-http context
 		return Optional.ofNullable(auth != null ? auth.getName() : "System");
 	}
 }

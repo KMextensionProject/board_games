@@ -13,7 +13,7 @@ public class FileNameGenerator {
 	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
 
 	private FileNameGenerator() {
-		throw new IllegalStateException("This class was not designed to be instantiated");
+		throw new UnsupportedOperationException("This class was not designed to be instantiated");
 	}
 
 	/**

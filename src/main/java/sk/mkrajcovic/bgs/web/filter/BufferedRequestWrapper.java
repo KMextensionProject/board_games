@@ -11,11 +11,11 @@ import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 
-public class BufferedRequestWrapper extends HttpServletRequestWrapper {
+class BufferedRequestWrapper extends HttpServletRequestWrapper {
 
 	private final byte[] buffer;
 
-	public BufferedRequestWrapper(HttpServletRequest request) throws IOException {
+	BufferedRequestWrapper(HttpServletRequest request) throws IOException {
 		super(request);
 		buffer = StreamUtils.copyToByteArray(request.getInputStream());
 	}
@@ -45,11 +45,11 @@ public class BufferedRequestWrapper extends HttpServletRequestWrapper {
 		};
 	}
 
-	public String getRequestBody() {
+	String getRequestBody() {
 		return getRequestBody(Charset.defaultCharset());
 	}
 
-	public String getRequestBody(Charset charset) {
+	String getRequestBody(Charset charset) {
 		return new String(buffer, charset);
 	}
 

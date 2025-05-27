@@ -11,7 +11,7 @@ import sk.mkrajcovic.bgs.web.MessageCodeConstants;
 public class EntityUtils {
 
 	private EntityUtils() {
-		throw new IllegalStateException("This class was not designed to be instantiated");
+		throw new UnsupportedOperationException("This class was not designed to be instantiated");
 	}
 
 	/**

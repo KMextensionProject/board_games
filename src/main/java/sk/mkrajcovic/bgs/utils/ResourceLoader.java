@@ -23,7 +23,7 @@ import sk.mkrajcovic.bgs.web.MessageCodeConstants;
 public class ResourceLoader {
 
 	private ResourceLoader() {
-		throw new IllegalStateException("This class was not designed to be instantiated");
+		throw new UnsupportedOperationException("This class was not designed to be instantiated");
 	}
 
 	/**

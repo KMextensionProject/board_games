@@ -11,7 +11,7 @@ import sk.mkrajcovic.bgs.api.AuthorApi;
 import sk.mkrajcovic.bgs.service.AuthorService;
 
 @RestController
-public class AuthorController implements AuthorApi {
+class AuthorController implements AuthorApi {
 
 	private final AuthorService authorService;
 

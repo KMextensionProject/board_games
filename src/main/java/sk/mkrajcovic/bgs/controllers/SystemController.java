@@ -8,7 +8,7 @@ import sk.mkrajcovic.bgs.api.SystemApi;
 import sk.mkrajcovic.bgs.dto.PingDtoOut;
 
 @RestController
-public class SystemController implements SystemApi {
+class SystemController implements SystemApi {
 
 	@GetMapping(path = "/ping", produces = MediaType.APPLICATION_JSON_VALUE)
 	public PingDtoOut ping() {

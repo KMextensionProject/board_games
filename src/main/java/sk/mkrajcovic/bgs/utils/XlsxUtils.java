@@ -42,7 +42,7 @@ public class XlsxUtils {
 	private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\$\\{(.+?)}");
 
 	private XlsxUtils() {
-		throw new IllegalStateException("XlsxUtils was not designed to be instantiated");
+		throw new UnsupportedOperationException("XlsxUtils was not designed to be instantiated");
 	}
 
 	/**

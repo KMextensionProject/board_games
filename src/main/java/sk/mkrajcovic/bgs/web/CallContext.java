@@ -19,12 +19,16 @@ public class CallContext {
 	private static final Logger LOG = LoggerFactory.getLogger(CallContext.class);
 
 	public String getUserName() {
+		return getUserNameOrDefault("Anonymous");
+	}
+
+	public String getUserNameOrDefault(String defaultName) {
 		var authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication != null) {
 			return authentication.getName();
 		}
 		LOG.warn("Principal name not present in authentication object");
-		return "Anonymous";
+		return defaultName;
 	}
 
 	public boolean isUserInRole(String role) {

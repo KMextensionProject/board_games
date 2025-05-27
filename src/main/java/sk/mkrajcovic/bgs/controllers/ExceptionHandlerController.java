@@ -37,7 +37,7 @@ import sk.mkrajcovic.bgs.web.MessageCodeConstants;
  * @author mkrajcovicux
  */
 @ControllerAdvice
-public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
+class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ExceptionHandlerController.class);
 
@@ -46,7 +46,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 
 	private final BgsMessageSource messageSource;
 
-	public ExceptionHandlerController(BgsMessageSource messageSource) {
+	ExceptionHandlerController(BgsMessageSource messageSource) {
 		this.messageSource = messageSource;
 	}
 
@@ -57,7 +57,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 	 * @return serialized exception with HTTP 403
 	 */
 	@ExceptionHandler(AccessDeniedException.class)
-	public ResponseEntity<ExceptionDtoOut> handleAccessDeniedException(AccessDeniedException ex) {
+	ResponseEntity<ExceptionDtoOut> handleAccessDeniedException(AccessDeniedException ex) {
 		LOG.error(MessageCodeConstants.ERROR, ex);
 		var exceptionDto = new ExceptionDtoOut();
 		exceptionDto.setMessage("Access denied");
@@ -81,7 +81,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 	 * @return serialized exception
 	 */
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<ExceptionDtoOut> handleException(Exception ex) {
+	ResponseEntity<ExceptionDtoOut> handleException(Exception ex) {
 		LOG.error(MessageCodeConstants.ERROR, ex);
 		return createResponseEntity(ex)
 			.body(serializeException(ex));

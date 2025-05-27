@@ -20,7 +20,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE - 100)
-public class RequestCallTimeFilter implements Filter {
+class RequestCallTimeFilter implements Filter {
 
 	private static final Logger LOG = LoggerFactory.getLogger(RequestCallTimeFilter.class);
 

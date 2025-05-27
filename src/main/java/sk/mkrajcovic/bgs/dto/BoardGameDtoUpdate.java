@@ -73,7 +73,6 @@ public class BoardGameDtoUpdate implements BoardGameDtoIn {
 		@Max(18)
 		private Integer minAge;
 
-		@NotNull
 		@Min(4)
 		@Max(100)
 		private Integer maxAge;

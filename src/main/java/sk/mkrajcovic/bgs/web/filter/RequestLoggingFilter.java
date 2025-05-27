@@ -30,7 +30,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @ConditionalOnProperty(name = "bgs.request-logging.enabled", havingValue = "true")
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE - 10)
-public class RequestLoggingFilter extends OncePerRequestFilter {
+class RequestLoggingFilter extends OncePerRequestFilter {
 
 	private static final Logger LOG = LoggerFactory.getLogger(RequestLoggingFilter.class);
 	private static final List<HttpMethod> SUPPORTED_HTTP_METHODS = List.of(POST, PUT, PATCH);
