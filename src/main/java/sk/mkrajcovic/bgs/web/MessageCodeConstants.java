@@ -16,5 +16,6 @@ public class MessageCodeConstants {
 	public static final String ERROR = "Error";
 	public static final String STALE_UPDATE = "staleUpdate";
 	public static final String RESOURCE_NOT_FOUND = "resourceNotFound";
+	public static final String CANNOT_MODIFY_OTHER_USER_RECORD = "cannotModifyOtherUserRecord";
 
 }

@@ -12,11 +12,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.servlet.http.HttpServletResponse;
+import sk.mkrajcovic.bgs.ClientException;
 import sk.mkrajcovic.bgs.InfrastructureException;
+import sk.mkrajcovic.bgs.UserRoles;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoCreate;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoIn;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoUpdate;
@@ -32,6 +36,7 @@ import sk.mkrajcovic.bgs.utils.EntityUtils;
 import sk.mkrajcovic.bgs.utils.StringNormalizer;
 import sk.mkrajcovic.bgs.utils.TypeMap;
 import sk.mkrajcovic.bgs.utils.XlsxUtils;
+import sk.mkrajcovic.bgs.web.CallContext;
 import sk.mkrajcovic.bgs.web.MessageCodeConstants;
 
 @Service
@@ -41,10 +46,16 @@ public class BoardGameService {
 
 	private final BoardGameRepository boardGameRepository;
 	private final AuthorRepository authorRepository;
+	private CallContext callContext;
 
 	public BoardGameService(final BoardGameRepository boardGameRepo, final AuthorRepository authorRepo) {
 		boardGameRepository = boardGameRepo;
 		authorRepository = authorRepo;
+	}
+
+	@Autowired // because it's a request scope bean
+	void setCallContext(CallContext requestContext) {
+		callContext = requestContext;
 	}
 
 	@Transactional
@@ -58,8 +69,20 @@ public class BoardGameService {
 	public BoardGame updateBoardGame(Long id, BoardGameDtoUpdate updateDto) {
 		var boardGame = EntityUtils.getExistingEntityById(boardGameRepository, id);
 		EntityUtils.checkStaleUpdate(updateDto.getVersion(), boardGame.getVersion());
+		validateUserActionPermission(boardGame);
 		setBoardGameFields(boardGame, updateDto);
 		return boardGameRepository.save(boardGame);
+	}
+
+	private void validateUserActionPermission(BoardGame boardGame) {
+		if (!callContext.isUserInRole(UserRoles.BGS_ADMIN)
+				&& !callContext.getUserName().equals(boardGame.getCreatedBy())) {
+
+			throw new ClientException(
+				HttpStatus.FORBIDDEN,
+				MessageCodeConstants.CANNOT_MODIFY_OTHER_USER_RECORD
+			);
+		}
 	}
 
 	private void setBoardGameFields(BoardGame boardGame, BoardGameDtoIn dtoIn) {
@@ -115,6 +138,7 @@ public class BoardGameService {
 
 	public void deleteBoardGame(Long id) {
 		var boardGame = EntityUtils.getExistingEntityById(boardGameRepository, id);
+		validateUserActionPermission(boardGame);
 		boardGameRepository.delete(boardGame);
 	}
 

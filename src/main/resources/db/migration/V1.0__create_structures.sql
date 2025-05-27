@@ -33,14 +33,16 @@ CREATE TABLE board_game (
     tutorial_url VARCHAR(120),
     version BIGINT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    modified_at TIMESTAMP
+    modified_at TIMESTAMP,
+    created_by VARCHAR(50) DEFAULT 'System'
 );
 CREATE TABLE author (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL UNIQUE,
     name_normalized VARCHAR(50) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    modified_at TIMESTAMP
+    modified_at TIMESTAMP,
+    created_by VARCHAR(50) DEFAULT 'System'
 );
 CREATE TABLE board_game_author (
     board_game_id BIGINT REFERENCES board_game(id) ON DELETE CASCADE,
@@ -51,6 +53,7 @@ CREATE TABLE borrower (
     id BIGSERIAL PRIMARY KEY,
 	created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at TIMESTAMP,
+    created_by VARCHAR(50) DEFAULT 'System',
     name VARCHAR(50) NOT NULL,
     email VARCHAR(50)
 );
@@ -58,6 +61,7 @@ CREATE TABLE lend_log (
     id BIGSERIAL PRIMARY KEY,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at TIMESTAMP,
+    created_by VARCHAR(50) DEFAULT 'System',
     board_game_id BIGINT REFERENCES board_game(id) ON DELETE CASCADE,
     borrower_id BIGINT REFERENCES borrower(id) ON DELETE SET NULL,
     lend_date DATE NOT NULL DEFAULT NOW(),

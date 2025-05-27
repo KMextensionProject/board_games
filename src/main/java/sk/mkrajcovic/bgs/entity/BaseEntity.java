@@ -3,7 +3,11 @@ package sk.mkrajcovic.bgs.entity;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,6 +19,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 public abstract class BaseEntity {
 
@@ -27,6 +32,10 @@ public abstract class BaseEntity {
 	@Column(nullable = false, updatable = false)
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
+
+	@Column(updatable = false)
+	@CreatedBy
+	private String createdBy;
 
 	@PrePersist
 	protected void runPrePersistOperations() {
