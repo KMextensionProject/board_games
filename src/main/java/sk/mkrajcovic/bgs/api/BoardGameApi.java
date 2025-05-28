@@ -24,12 +24,18 @@ import sk.mkrajcovic.bgs.dto.BoardGameDtoOut;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoUpdate;
 import sk.mkrajcovic.bgs.dto.BoardGameSearchCriteria;
 
-@Tag(name = "Board Game")
+@Tag(
+	name = "Board Game",
+	description = """
+		Core functionality endpoints for maintaining board game data within the system.<br>
+        Access to certain operations is restricted based on user roles."""
+)
 public interface BoardGameApi {
 
 	@Operation(
 		security = @SecurityRequirement(name = "bearerAuth"),
 		summary = "Create a new board game",
+		description = "Only authenticated users in either `BGS_TESTER` or `BGS_ADMIN` can create new board games.",
 		requestBody = @RequestBody(
 			required = true,
 			content = @Content(
@@ -68,7 +74,17 @@ public interface BoardGameApi {
 
 	@Operation(
 		security = @SecurityRequirement(name = "bearerAuth"),
-		summary = "Update an existing board game")
+		summary = "Update an existing board game",
+		description = """	
+			Updates the details of an existing board game.<br>
+			Only authenticated users in the `BGS_TESTER` or `BGS_ADMIN` role can perform this operation.
+			<p>
+			Based on the role, the following applies:
+			<ul>
+			  <li>Testers can only modify board games they personally created</li>
+			  <li>Admin can modify any existing board game even those created by testers</li>
+			</ul>"""
+	)
 	public BoardGameDtoOut updateBoardGame(
 		@NotNull @Positive Long id,
 		@Valid BoardGameDtoUpdate updateDto,
@@ -76,13 +92,18 @@ public interface BoardGameApi {
 	);
 
 	@Operation(
-		summary = "Retrieve a full list of board games based on search criteria"
+		summary = "Retrieve a list of board games based on search criteria"
 	)
 	public List<BoardGameDtoFindOut> listBoardGames(BoardGameSearchCriteria searchCriteria);
 
 	@Operation(
 		security = @SecurityRequirement(name = "bearerAuth"),
-		summary = "Delete a board game")
+		summary = "Delete a board game",
+		description = """
+			Only authenticated users can delete individual board games.<br>
+			Users in the `BGS_TESTER` role can delete only those board games they created, not anyone else's.<br>
+			Only users in the `BGS_ADMIN` role are authorized to delete any existing board game in the system."""
+	)
 	public void deleteBoardGame(@NotNull @Positive Long id);
 
 	@Operation(summary = "Export list of board games into XLSX file based on search criteria")

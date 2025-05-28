@@ -14,7 +14,7 @@ public interface SystemApi {
 
 	@Operation(
 		summary = "Check the status of the application",
-		description = "Ping service to check whether the application is up and running."
+		description = "Ping service to check whether the application is running and responsive."
 	)
 	public PingDtoOut ping();
 
