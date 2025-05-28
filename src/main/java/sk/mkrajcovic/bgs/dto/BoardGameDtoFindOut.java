@@ -18,11 +18,11 @@ public class BoardGameDtoFindOut {
 	private Integer minPlayers;
 	private Integer maxPlayers;
 	private Integer estimatedPlayTime;
-	private AgeRangeDtoOut ageRange;
-	private List<String> authors;
 	private Boolean isCooperative;
 	private Boolean canPlayOnlyOnce;
 	private Boolean isExtension;
+	private AgeRangeDtoOut ageRange;
+	private List<String> authors;
 
 	public BoardGameDtoFindOut(BoardGameSearchProjection projection) {
 		id = projection.getId();
@@ -35,7 +35,7 @@ public class BoardGameDtoFindOut {
 		isExtension = projection.getIsExtension();
 
 		if (projection.getAgeRange() != null) {
-			var ageRange = new AgeRangeDtoOut();
+			ageRange = new AgeRangeDtoOut();
 			ageRange.setMinAge(projection.getAgeRange().getMinAge());
 			ageRange.setMaxAge(projection.getAgeRange().getMaxAge());
 		}

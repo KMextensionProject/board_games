@@ -15,8 +15,12 @@ public class BoardGameDtoOut {
 
 	private Long id;
 	private long version;
+
+	private String createdBy;
 	private LocalDateTime createdAt;
-	private LocalDateTime modifiedAt;
+
+	private String lastModifiedBy;
+	private LocalDateTime lastModifiedAt;
 
 	private String title;
 	private String description;
@@ -24,12 +28,11 @@ public class BoardGameDtoOut {
 	private Integer minPlayers;
 	private Integer maxPlayers;
 	private Integer estimatedPlayTime;
-	private AgeRangeDtoOut ageRange;
-	private List<String> authors;
-
 	private Boolean isCooperative;
 	private Boolean canPlayOnlyOnce;
 	private Boolean isExtension;
+	private AgeRangeDtoOut ageRange;
+	private List<String> authors;
 
 	/*
 	 * 0x2^7, 1x2^6, 1x2^5, 0x2^4, 0x2^3, 1x2^2, 2x2^1, 0x2^0 
@@ -45,7 +48,9 @@ public class BoardGameDtoOut {
 		id = boardGame.getId();
 		version = boardGame.getVersion();
 		createdAt = boardGame.getCreatedAt();
-		modifiedAt = boardGame.getModifiedAt();
+		lastModifiedAt = boardGame.getModifiedAt();
+		createdBy = boardGame.getCreatedBy();
+		lastModifiedBy = boardGame.getModifiedBy();
 		title = boardGame.getTitle();
 		description = boardGame.getDescription();
 		tutorialUrl = boardGame.getTutorialUrl();
