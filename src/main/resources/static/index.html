@@ -33,7 +33,7 @@
 
     .game-list {
       display: grid;
-      grid-template-columns: 1fr 2fr 2fr 1fr 1fr;
+      grid-template-columns: 3fr 1fr 1fr 1fr 1fr 3fr;
       gap: 10px;
       margin-top: 20px;
       align-items: center;
@@ -66,6 +66,19 @@
     .icon-button:hover {
       color: #0056b3;
     }
+	
+	
+	.clickable-title {
+	  color: #333;
+	  text-decoration: underline;
+	  cursor: pointer;
+	}
+
+	.clickable-title:hover {
+	  text-decoration: underline;
+	  color: #0056b3;
+	}
+
   </style>
 </head>
 <body>
@@ -76,30 +89,48 @@
   <input type="number" id="minPlayers" placeholder="Od počtu hráčov">
   <input type="number" id="maxPlayers" placeholder="Do počtu hráčov">
   <input type="number" id="minAge" placeholder="Od veku">
+  <input type="number" id="playTime" placeholder="Doba hrania">
   <input type="boolean" id="isCooperative" placeholder="Kooperatívne">
-  <input type="boolean" id="isExtension" placeholder="Rozšírenia">
+  <input type="text" id="author" placeholder="Meno autora">
   <button onclick="searchGames()">Vyhľadať</button>
   <button onclick="exportGames()">Export do XLSX</button>
 </div>
 
 <!-- Grid header -->
 <div class="game-list">
-  <div class="grid-header">ID</div>
-  <div class="grid-header">Title</div>
-  <div class="grid-header">Players</div>
-  <div class="grid-header">Year</div>
-  <div class="grid-header">Detail</div>
+  <div class="grid-header">Názov</div>
+  <div class="grid-header">Počet Hráčov</div>
+  <div class="grid-header">Odporúčaný Vek</div>
+  <div class="grid-header">Doba Hrania</div>
+  <div class="grid-header">Kooperatívna</div>
+  <div class="grid-header">Autori</div>
 </div>
 
 <!-- Results go here -->
 <div id="games" class="game-list"></div>
 
 <script>
+	
+	function booleanToAnoNie(booleanValue) {
+		return booleanValue(booleanValue, '');
+	}
+
+	function booleanToAnoNie(booleanValue, defaultNull) {
+		if (booleanValue === null) {
+			return defaultNull;
+		}
+		return booleanValue ? 'Áno' : 'Nie';
+	}
+	
   async function searchGames() {
     const criteria = new URLSearchParams();
     if (title.value) criteria.append("title", title.value);
     if (minPlayers.value) criteria.append("minPlayers", minPlayers.value);
     if (maxPlayers.value) criteria.append("maxPlayers", maxPlayers.value);
+	if (minAge.value) criteria.append("minAge", minAge.value);
+	if (playTime.value) criteria.append("estimatedPlayTime", playTime.value);
+	if (isCooperative.value) criteria.append("isCooperative", isCooperative.value);
+	if (author.value) criteria.append("author", author.value);
 
     const res = await fetch(`/bgs/svc/boardGame/?${criteria.toString()}`);
     const data = await res.json();
@@ -111,13 +142,15 @@
       const fragment = document.createElement("div");
       fragment.className = "game-row";
       fragment.innerHTML = `
-        <div class="game-cell">${game.id}</div>
-        <div class="game-cell">${game.title}</div>
-        <div class="game-cell">${game.minPlayers} - ${game.maxPlayers}</div>
-        <div class="game-cell">${game.yearPublished || ''}</div>
-        <div class="game-cell icon-button" onclick="viewGame(${game.id})">
-          <i class="fas fa-info-circle"></i>
-        </div>
+	  <div class="game-cell">
+	    <a href="javascript:void(0)" class="clickable-title" onclick="viewGame(${game.id})">${game.title}</a>
+	  </div>
+        <div class="game-cell">${game.minPlayers === game.maxPlayers && game.maxPlayers !== null ? `${game.minPlayers}` : (game.maxPlayers ? `${game.minPlayers} - ${game.maxPlayers}` : `${game.minPlayers}+`)}</div>
+        <div class="game-cell">${game.ageRange.maxAge ? `${game.ageRange.minAge} - ${game.ageRange.maxAge}` : `${game.ageRange.minAge}+`}</div>
+		<div class="game-cell">${game.estimatedPlayTime ? `${game.estimatedPlayTime} min` : ''}</div>
+		<div class="game-cell">${booleanToAnoNie(game.isCooperative, 'Áno aj Nie')}</div>
+		<div class="game-cell">${game.authors.join(", ")}</div>
+      </div>
       `;
       gamesDiv.appendChild(fragment);
     });
