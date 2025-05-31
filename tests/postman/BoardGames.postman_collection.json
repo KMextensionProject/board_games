@@ -1,0 +1,692 @@
+{
+	"info": {
+		"_postman_id": "554db362-4c41-444b-a4fb-b21230fd494d",
+		"name": "BoardGames",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43768784",
+		"_collection_link": "https://mile-952139.postman.co/workspace/MiLe's-Workspace~94ec21d2-b8f0-4efe-8d56-20df3bb3a1ea/collection/43768784-554db362-4c41-444b-a4fb-b21230fd494d?action=share&source=collection_link&creator=43768784"
+	},
+	"item": [
+		{
+			"name": "Author",
+			"item": [
+				{
+					"name": "positiveTests",
+					"item": [
+						{
+							"name": "searchAuthorWithNoName",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/author/",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"author",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "searchAuthorByName",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/author/?name=Adam",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"author",
+										""
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "Adam"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "searchAuthorWithNonExistanceName",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/author/?name=Adm",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"author",
+										""
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "Adm"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									"//check status of responses 200\r",
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "searchAuthor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const queryString = pm.request.url.getQueryString();\r",
+									"// console.log(queryString);\r",
+									"// const nameQueryValue = queryString.substring(queryString.indexOf('=') + 1);\r",
+									"const nameQueryValue = queryString.substring(5).toLowerCase();\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"// console.log(response);\r",
+									"const name = response[0].toLowerCase();\r",
+									"\r",
+									"pm.test(`Response name contains '${nameQueryValue}'`, () => {\r",
+									"    pm.expect(name).to.contains(nameQueryValue);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const query = pm.request.url.getQueryString;"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/author/?name=pete",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"author",
+								""
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "pete"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "BoardGame",
+			"item": [
+				{
+					"name": "getBoardGamesByCriteria",
+					"item": [
+						{
+							"name": "positiveTests",
+							"item": [
+								{
+									"name": "getListOfGames",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseURL}}/boardGame/",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame",
+												""
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "getListOfGames",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/boardGame/?title=7 Divů světa: Duel",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"boardGame",
+										""
+									],
+									"query": [
+										{
+											"key": "title",
+											"value": "7 Divů světa: Duel"
+										},
+										{
+											"key": "estimatedPlayTime",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "minPlayers",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "maxPlayers",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "minAge",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "maxAge",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "isCooperative",
+											"value": "true",
+											"disabled": true
+										},
+										{
+											"key": "canPlayOnlyOnce",
+											"value": "true",
+											"disabled": true
+										},
+										{
+											"key": "isExtension",
+											"value": "true",
+											"disabled": true
+										},
+										{
+											"key": "author",
+											"value": "Seiji",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "getBoardGameByID",
+					"item": [
+						{
+							"name": "positiveTests",
+							"item": []
+						},
+						{
+							"name": "negativeTests",
+							"item": []
+						},
+						{
+							"name": "getBoardGame",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/boardGame/:id",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"boardGame",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "3"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "createBoardGame",
+					"item": [
+						{
+							"name": "positiveTests",
+							"item": []
+						},
+						{
+							"name": "negativeTests",
+							"item": []
+						},
+						{
+							"name": "createBoardGame",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"title\": \"Arkham Horror: LOVECRAFTŮV DOPIS\",\r\n  \"description\": \"Lovecraft Letter Arkham Horror je luxusným prírastkom do rodiny malých kartových hier typu Love Letter. V hre máte jednu kartu (stopu) na ruke a na začiatku ťahu si potiahnete ešte jednu. Následne sa rozhodnete, ktorú kartu zahráte a využijete jej efekt. Tentokrát sa hra odohráva v známom hororovom svete H.P. Lovecrafta, ktorý poznáme z mnohých hier (Arkham Horror, Eldritch Horror, Temné znamení, Mansion of Madness atď.)\",\r\n  \"tutorialUrl\": \"https://www.youtube.com/watch?v=XBFV0QEn31E\",\r\n  \"minPlayers\": 2,\r\n  \"maxPlayers\": 6,\r\n  \"estimatedPlayTime\": 45,\r\n  \"ageRange\": {\r\n    \"minAge\": 14,\r\n    \"maxAge\": 99\r\n  },\r\n  \"authors\": [\r\n    \"Martin Seiji Kanai\"\r\n  ],\r\n  \"isCooperative\": true,\r\n  \"canPlayOnlyOnce\": false,\r\n  \"isExtension\": false\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/boardGame",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"boardGame"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "updateBoardGame",
+					"item": [
+						{
+							"name": "positiveTests",
+							"item": []
+						},
+						{
+							"name": "negativeTests",
+							"item": []
+						},
+						{
+							"name": "updateBoardGame",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"version\":0,\r\n    \"title\": \"Arkham Horror: LOVECRAFTŮV DOPIS\",\r\n    \"description\": \"UPDATE description pola\",\r\n    \"tutorialUrl\": \"https://www.youtube.com/watch?v=XBFV0QEn31E\",\r\n    \"minPlayers\": 2,\r\n    \"maxPlayers\": 6,\r\n    \"estimatedPlayTime\": 45,\r\n    \"isCooperative\": true,\r\n    \"canPlayOnlyOnce\": false,\r\n    \"isExtension\": false,\r\n    \"ageRange\": {\r\n        \"minAge\": 14,\r\n        \"maxAge\": 99\r\n    },\r\n    \"authors\": [\r\n        \"Martin Seiji Kanai\"\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/boardGame/:id",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"boardGame",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "44"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "deleteBoardGame",
+					"item": [
+						{
+							"name": "positiveTests",
+							"item": []
+						},
+						{
+							"name": "negativeTests",
+							"item": []
+						},
+						{
+							"name": "deleteBoardGame",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/boardGame/:id",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"boardGame",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "44"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "exportToXLSXByCriteria",
+					"item": [
+						{
+							"name": "positiveTests",
+							"item": []
+						},
+						{
+							"name": "negativeTests",
+							"item": []
+						},
+						{
+							"name": "exportToXLSX",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/boardGame/export/?title=7 Divů světa: Duel",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"boardGame",
+										"export",
+										""
+									],
+									"query": [
+										{
+											"key": "title",
+											"value": "7 Divů světa: Duel"
+										},
+										{
+											"key": "estimatedPlayTime",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "minPlayers",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "maxPlayers",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "minAge",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "maxAge",
+											"value": "0",
+											"disabled": true
+										},
+										{
+											"key": "isCooperative",
+											"value": "true",
+											"disabled": true
+										},
+										{
+											"key": "canPlayOnlyOnce",
+											"value": "true",
+											"disabled": true
+										},
+										{
+											"key": "isExtension",
+											"value": "true",
+											"disabled": true
+										},
+										{
+											"key": "author",
+											"value": "string",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "System",
+			"item": [
+				{
+					"name": "getStatus",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//write test if status is 200"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/ping",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"ping"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "getAccessToken",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"const accessToken = response.access_token;\r",
+							"console.log(accessToken);\r",
+							"// set the global variable for board game authenticated services\r",
+							"pm.collectionVariables.set('accessToken', accessToken);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "bgs-rest-api",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "bgs_tester",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "bgs_tester",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://192.168.0.179:8080/realms/bgs/protocol/openid-connect/token",
+					"protocol": "http",
+					"host": [
+						"192",
+						"168",
+						"0",
+						"179"
+					],
+					"port": "8080",
+					"path": [
+						"realms",
+						"bgs",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"console.clear();"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "accessToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "baseURL",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
