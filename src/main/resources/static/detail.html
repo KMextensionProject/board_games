@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <title>Board Game Detail</title>
     <style>
-		
-		
+
 		table.game-details {
 		    width: 100%;
 		    border-collapse: collapse;
@@ -21,8 +20,6 @@
 		    font-weight: bold;
 		}
 
-		
-		
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
@@ -54,6 +51,18 @@
 <body>
 <div class="container" id="details">Loading...</div>
 <script>
+
+	function booleanToAnoNie(booleanValue) {
+		return booleanValue(booleanValue, '');
+	}
+
+	function booleanToAnoNie(booleanValue, defaultNull) {
+		if (booleanValue === null) {
+			return defaultNull;
+		}
+		return booleanValue ? 'Áno' : 'Nie';
+	}
+
     async function loadDetail() {
         const params = new URLSearchParams(window.location.search);
         const id = params.get("id");
@@ -102,22 +111,21 @@
 		            </tr>
 		            <tr>
 		                <td><strong>Kooperatívna:</strong></td>
-		                <td>${game.isCooperative}</td>
+		                <td>${booleanToAnoNie(game.isCooperative, 'Áno aj Nie')}</td>
 		            </tr>
 		            <tr>
 		                <td><strong>Rozšírenie:</strong></td>
-		                <td>${game.isExtension}</td>
+		                <td>${booleanToAnoNie(game.isExtension)}</td>
 		            </tr>
 		            <tr>
 		                <td><strong>Jednorázová:</strong></td>
-		                <td>${game.canPlayOnlyOnce}</td>
+		                <td>${booleanToAnoNie(game.canPlayOnlyOnce)}</td>
 		            </tr>
 		            <tr>
 		                <td><strong>Autori:</strong></td>
 		                <td>${game.authors.join(", ")}</td>
 		            </tr>
 		        </table>
-		        <a href="home">Back to list</a>
 		    </div>
 		    ${videoHTML}
 		`;

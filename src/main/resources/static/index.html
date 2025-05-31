@@ -69,14 +69,17 @@
   </style>
 </head>
 <body>
-<h1>Board Games</h1>
+<h1>Spoločenské Hry</h1>
 
 <div class="filter-section">
-  <input type="text" id="title" placeholder="Title">
-  <input type="number" id="minPlayers" placeholder="Min Players">
-  <input type="number" id="maxPlayers" placeholder="Max Players">
-  <button onclick="searchGames()">Search</button>
-  <button onclick="exportGames()">Export to XLSX</button>
+  <input type="text" id="title" placeholder="Názov">
+  <input type="number" id="minPlayers" placeholder="Od počtu hráčov">
+  <input type="number" id="maxPlayers" placeholder="Do počtu hráčov">
+  <input type="number" id="minAge" placeholder="Od veku">
+  <input type="boolean" id="isCooperative" placeholder="Kooperatívne">
+  <input type="boolean" id="isExtension" placeholder="Rozšírenia">
+  <button onclick="searchGames()">Vyhľadať</button>
+  <button onclick="exportGames()">Export do XLSX</button>
 </div>
 
 <!-- Grid header -->
