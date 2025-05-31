@@ -15,10 +15,7 @@ public interface BoardGameRepository extends JpaRepository<BoardGame, Long> {
 	// N+1 problem here. I decided to leave it as is for now because using a
 	// native query and explicit mappings would not offer significant benefits.
 
-	// A valid alternative would be to return the entity and map it to a DTO.
-	// However, this would introduce additional memory overhead, as the returned
-	// entities would be managed in the persistence context (due to dirty checking). 
-	// This approach would make more sense if I were returning pages of results.
+	// FIXME: maybe write this select differently?
 	String BOARD_GAME_SEARCH_QUERY = """
 		SELECT DISTINCT bg
 		FROM BoardGame bg

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Board Games</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
+        h1 { color: #333; }
+        input, select, button { margin: 5px; padding: 8px; }
+        .game-list { margin-top: 20px; }
+        .game-item { padding: 10px; background: white; border-radius: 5px; margin-bottom: 10px; }
+        .filter-section { background: #e2e2e2; padding: 15px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+<h1>Board Games</h1>
+<div class="filter-section">
+    <input type="text" id="title" placeholder="Title">
+    <input type="number" id="minPlayers" placeholder="Min Players">
+    <input type="number" id="maxPlayers" placeholder="Max Players">
+    <button onclick="searchGames()">Search</button>
+    <button onclick="exportGames()">Export to XLSX</button>
+</div>
+<div id="games" class="game-list"></div>
+
+<script>
+    async function searchGames() {
+        const criteria = new URLSearchParams();
+        if (title.value) criteria.append("title", title.value);
+        if (minPlayers.value) criteria.append("minPlayers", minPlayers.value);
+        if (maxPlayers.value) criteria.append("maxPlayers", maxPlayers.value);
+        const res = await fetch(`/bgs/svc/boardGame/?${criteria.toString()}`);
+        const data = await res.json();
+        const gamesDiv = document.getElementById("games");
+        gamesDiv.innerHTML = "";
+        data.forEach(game => {
+            const div = document.createElement("div");
+            div.className = "game-item";
+            div.innerHTML = `<strong>${game.title}</strong><br>Players: ${game.minPlayers}-${game.maxPlayers}<br>
+                             <button onclick="viewGame(${game.id})">View Details</button>`;
+            gamesDiv.appendChild(div);
+        });
+        localStorage.setItem("lastSearch", criteria.toString());
+    }
+
+    function exportGames() {
+        const query = localStorage.getItem("lastSearch") || "";
+        window.location = `/bgs/svc/boardGame/export/?${query}`;
+    }
+
+    function viewGame(id) {
+        window.location = `detail.html?id=${id}`;
+    }
+
+    searchGames(); // initial load
+</script>
+</body>
+</html>

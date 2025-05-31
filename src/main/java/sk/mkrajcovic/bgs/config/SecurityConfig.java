@@ -45,6 +45,7 @@ public class SecurityConfig {
         http.exceptionHandling(exh -> exh.authenticationEntryPoint((request, response, authException) -> {
             response.addHeader(HttpHeaders.WWW_AUTHENTICATE, "Bearer realm=\"confidential\"");
             response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            LOG.error("Error {}", authException);
         }));
 
         // If SSL enabled, disable http (https only)
@@ -56,6 +57,10 @@ public class SecurityConfig {
             authorise
                 // not secured
                 .requestMatchers(
+					AntPathRequestMatcher.antMatcher("/home**"),
+					AntPathRequestMatcher.antMatcher("/detail**"),
+					AntPathRequestMatcher.antMatcher("/index.html"),
+					AntPathRequestMatcher.antMatcher("/detail.html"),
 					AntPathRequestMatcher.antMatcher("/ping/**"),
 					AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/author/**"),
 					AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/boardGame/**"),
