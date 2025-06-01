@@ -91,11 +91,11 @@ public class BoardGameService {
 		boardGame.setMinPlayers(dtoIn.getMinPlayers());
 		boardGame.setMaxPlayers(dtoIn.getMaxPlayers());
 		boardGame.setEstimatedPlayTime(dtoIn.getEstimatedPlayTime());
-		boardGame.setAgeRange(dtoIn.getAgeRange().asEntity());
 		boardGame.setCanPlayOnlyOnce(dtoIn.getCanPlayOnlyOnce());
 		boardGame.setIsCooperative(dtoIn.getIsCooperative());
 		boardGame.setIsExtension(dtoIn.getIsExtension());
 		boardGame.setTutorialUrl(dtoIn.getTutorialUrl());
+		boardGame.setAgeRange(dtoIn.getAgeRange() != null ? dtoIn.getAgeRange().asEntity() : null);
 		/*
 		 * Avoid detection of false-positive dirty checks in Hibernate.
 		 *
@@ -202,12 +202,12 @@ public class BoardGameService {
 	}
 
 	private String getAgeRangeAsString(AgeRangeProjection ageRange) {
-		if (ageRange.getMinAge() == null) {
+		if (ageRange == null || ageRange.getMinAge() == null) {
 			return null;
 		}
 		StringBuilder ageRangeStr = new StringBuilder("" + ageRange.getMinAge());
 		if (ageRange.getMaxAge() != null) {
-			ageRangeStr.append('-').append(ageRange.getMaxAge());
+			ageRangeStr.append(" - ").append(ageRange.getMaxAge());
 		} else {
 			ageRangeStr.append('+');
 		}
