@@ -79,6 +79,19 @@
 	  color: #0056b3;
 	}
 
+	#games-container {
+	  max-height: 800px; /* Adjust height as needed */
+	  overflow-y: auto;
+	}
+
+	/* Sticky header row */
+	.grid-header-row {
+	  position: sticky;
+	  top: 120px; /* Adjust based on your .filter-section height + margin */
+	  background-color: #e2e2e2;
+	  z-index: 5;
+	}
+
   </style>
 </head>
 <body>
@@ -90,7 +103,13 @@
   <input type="number" id="maxPlayers" placeholder="Do počtu hráčov">
   <input type="number" id="minAge" placeholder="Od veku">
   <input type="number" id="playTime" placeholder="Doba hrania">
-  <input type="boolean" id="isCooperative" placeholder="Kooperatívne">
+  
+  <select id="isCooperative">
+    <option value="">Kooperatívne / Kompetitívne</option>
+    <option value="true">Kooperatívne</option>
+    <option value="false">Kompetitívne</option>
+  </select>
+
   <input type="text" id="author" placeholder="Meno autora">
   <button onclick="searchGames()">Vyhľadať</button>
   <button onclick="exportGames()">Export do XLSX</button>
@@ -107,8 +126,9 @@
 </div>
 
 <!-- Results go here -->
-<div id="games" class="game-list"></div>
-
+<div id="games-container">
+  <div id="games" class="game-list"></div>
+</div>
 <script>
 	
 	function booleanToAnoNie(booleanValue) {
