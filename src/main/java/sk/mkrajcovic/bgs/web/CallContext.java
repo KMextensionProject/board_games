@@ -19,7 +19,7 @@ public class CallContext {
 	private static final Logger LOG = LoggerFactory.getLogger(CallContext.class);
 
 	public String getUserName() {
-		return getUserNameOrDefault("Anonymous");
+		return getUserNameOrDefault("anonymousUser");
 	}
 
 	public String getUserNameOrDefault(String defaultName) {

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Board Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f7f6;
+            margin: 0;
+        }
+
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input, textarea, select, button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .error {
+            color: red;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Create Board Game</h2>
+        <form id="boardGameForm">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" required>
+                <div class="error" id="titleError"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="4"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="minPlayers">Minimum Players</label>
+                <input type="number" id="minPlayers" name="minPlayers" required>
+            </div>
+
+            <div class="form-group">
+                <label for="maxPlayers">Maximum Players</label>
+                <input type="number" id="maxPlayers" name="maxPlayers">
+            </div>
+
+            <div class="form-group">
+                <label for="estimatedPlayTime">Estimated Play Time (minutes)</label>
+                <input type="number" id="estimatedPlayTime" name="estimatedPlayTime" required>
+            </div>
+
+            <div class="form-group">
+                <label for="minAge">Min Age</label>
+                <input type="number" id="minAge" name="minAge" min="3" max="18" required>
+            </div>
+
+            <div class="form-group">
+                <label for="maxAge">Max Age</label>
+                <input type="number" id="maxAge" name="maxAge" min="4" max="100">
+            </div>
+
+            <div class="form-group">
+                <label for="authors">Authors</label>
+                <input type="text" id="authors" name="authors" placeholder="Comma separated">
+            </div>
+
+            <div class="form-group">
+                <label for="tutorialUrl">YouTube Tutorial URL</label>
+                <input type="url" id="tutorialUrl" name="tutorialUrl">
+            </div>
+
+            <div class="form-group">
+                <label for="isCooperative">Is Cooperative</label>
+                <select id="isCooperative" name="isCooperative">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="canPlayOnlyOnce">Can Play Only Once</label>
+                <select id="canPlayOnlyOnce" name="canPlayOnlyOnce">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="isExtension">Is an Extension</label>
+                <select id="isExtension" name="isExtension">
+                    <option value="true">Yes</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+
+            <button type="submit">Create Board Game</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('boardGameForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+
+            const boardGameData = {
+                title: formData.get('title'),
+                description: formData.get('description'),
+                minPlayers: parseInt(formData.get('minPlayers')),
+                maxPlayers: parseInt(formData.get('maxPlayers')),
+                estimatedPlayTime: parseInt(formData.get('estimatedPlayTime')),
+                ageRange: {
+                    minAge: parseInt(formData.get('minAge')),
+                    maxAge: parseInt(formData.get('maxAge'))
+                },
+                authors: formData.get('authors').split(',').map(a => a.trim()),
+                tutorialUrl: formData.get('tutorialUrl') ? formData.get('tutorialUrl') : null,
+                isCooperative: formData.get('isCooperative') === 'true',
+                canPlayOnlyOnce: formData.get('canPlayOnlyOnce') === 'true',
+                isExtension: formData.get('isExtension') === 'true'
+            };
+
+            // Clear previous error messages
+            document.getElementById('titleError').textContent = '';
+
+            // Simple validation for title
+            if (!boardGameData.title.trim()) {
+                document.getElementById('titleError').textContent = 'Title is required.';
+                return;
+            }
+
+            // Sending POST request
+            fetch('http://localhost:8058/bgs/svc/boardGame', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(boardGameData),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to create board game');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Board game created successfully');
+                console.log(data);
+            })
+            .catch(error => {
+                alert('Error: ' + error.message);
+            });
+        });
+    </script>
+
+</body>
+</html>

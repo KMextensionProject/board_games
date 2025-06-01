@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Spoločenské Hry - Zoznam</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f4f4f4;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    input, select, button {
+      margin: 5px;
+      padding: 8px;
+    }
+
+	.filter-section {
+	  background: #e2e2e2;
+	  padding: 15px;
+	  border-radius: 5px;
+	  position: sticky; /* Stick the filter to the top */
+	  top: 0;           /* Stick to the top of the page */
+	  z-index: 10;      /* Ensure it's above other content */
+	  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better visibility */
+	  margin-top: 20px; /* Optional: Add some space at the top if needed */
+	}
+
+    .game-list {
+      display: grid;
+      grid-template-columns: 3fr 1fr 1fr 1fr 1fr 3fr;
+      gap: 10px;
+      margin-top: 20px;
+      align-items: center;
+    }
+
+    .grid-header {
+      font-weight: bold;
+      padding: 10px 0;
+      border-bottom: 2px solid #aaa;
+    }
+
+    .game-row {
+      background: white;
+      border-radius: 5px;
+      padding: 10px;
+      display: contents;
+    }
+
+    .game-cell {
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .icon-button {
+      text-align: center;
+      color: #007bff;
+      cursor: pointer;
+    }
+
+    .icon-button:hover {
+      color: #0056b3;
+    }
+	
+	
+	.clickable-title {
+	  color: #333;
+	  text-decoration: underline;
+	  cursor: pointer;
+	}
+
+	.clickable-title:hover {
+	  text-decoration: underline;
+	  color: #0056b3;
+	}
+
+	#games-container {
+	  max-height: 700px; /* Adjust height as needed */
+	  overflow-y: auto;
+	}
+
+	/* Sticky header row */
+	.grid-header-row {
+	  position: sticky;
+	  top: 120px; /* Adjust based on your .filter-section height + margin */
+	  background-color: #e2e2e2;
+	  z-index: 5;
+	}
+	
+	.filter-section button {
+	  padding: 12px 16px;
+	  font-size: 14px;
+	  border-radius: 5px;
+	  width: auto;
+	  cursor: pointer;
+	  border: none;
+	  transition: all 0.3s ease;
+	}
+
+	/* Numeric input field width adjustment */
+	.filter-section input[type="number"] {
+	  width: 125px; /* Adjust the width as needed */
+	}
+	
+	/* Blue button for Search */
+	.filter-section button.search-btn {
+	  background-color: #3498db;  /* Blue */
+	  color: white;
+	}
+
+	.filter-section button.search-btn:hover {
+	  background-color: #2980b9;  /* Darker blue on hover */
+	}
+
+	/* Green button for Export */
+	.filter-section button.export-btn {
+	  background-color: #28a745;  /* Green */
+	  color: white;
+	}
+
+	.filter-section button.export-btn:hover {
+	  background-color: #218838;  /* Darker green on hover */
+	}
+
+  </style>
+</head>
+<body>
+<h1>Spoločenské Hry</h1>
+
+<div class="filter-section">
+  <input type="text" id="title" placeholder="Názov">
+  <input type="number" id="minPlayers" placeholder="Od počtu hráčov">
+  <input type="number" id="maxPlayers" placeholder="Do počtu hráčov">
+  <input type="number" id="minAge" placeholder="Od veku">
+  <input type="number" id="playTime" placeholder="Doba hrania">
+  
+  <select id="isCooperative">
+    <option value="">Kooperatívne / Kompetitívne</option>
+    <option value="true">Kooperatívne</option>
+    <option value="false">Kompetitívne</option>
+  </select>
+
+  <input type="text" id="author" placeholder="Meno autora">
+  <button class="search-btn" onclick="searchGames()">Vyhľadať</button>
+  <button class="export-btn" onclick="exportGames()">Export do XLSX</button>
+</div>
+
+<!-- Grid header -->
+<div class="game-list">
+  <div class="grid-header">Názov</div>
+  <div class="grid-header">Počet Hráčov</div>
+  <div class="grid-header">Odporúčaný Vek</div>
+  <div class="grid-header">Doba Hrania</div>
+  <div class="grid-header">Kooperatívna</div>
+  <div class="grid-header">Autori</div>
+</div>
+
+<!-- Results go here -->
+<div id="games-container">
+  <div id="games" class="game-list"></div>
+</div>
+<script>
+
+	function booleanToAnoNie(booleanValue, defaultNull) {
+		if (booleanValue === null) {
+			return defaultNull;
+		}
+		return booleanValue ? 'Áno' : 'Nie';
+	}
+
+  async function searchGames() {
+    const criteria = new URLSearchParams();
+    if (title.value) criteria.append("title", title.value);
+    if (minPlayers.value) criteria.append("minPlayers", minPlayers.value);
+    if (maxPlayers.value) criteria.append("maxPlayers", maxPlayers.value);
+	if (minAge.value) criteria.append("minAge", minAge.value);
+	if (playTime.value) criteria.append("estimatedPlayTime", playTime.value);
+	if (isCooperative.value) criteria.append("isCooperative", isCooperative.value);
+	if (author.value) criteria.append("author", author.value);
+
+    const res = await fetch(`/bgs/svc/boardGame/?${criteria.toString()}`);
+    const data = await res.json();
+
+    const gamesDiv = document.getElementById("games");
+    gamesDiv.innerHTML = ""; // clear previous
+
+    data.forEach(game => {
+      const fragment = document.createElement("div");
+      fragment.className = "game-row";
+      fragment.innerHTML = `
+	  <div class="game-cell">
+	    <a href="javascript:void(0)" class="clickable-title" onclick="viewGame(${game.id})">${game.title}</a>
+	  </div>
+        
+	  <div class="game-cell">
+	    ${
+	      game.minPlayers === null && game.maxPlayers === null
+	        ? 'N/A'
+	        : game.minPlayers === game.maxPlayers && game.maxPlayers !== null
+	        ? `${game.minPlayers}`
+	        : game.maxPlayers
+	        ? `${game.minPlayers} - ${game.maxPlayers}`
+	        : `${game.minPlayers}+`
+	    }
+	  </div>
+
+		<div class="game-cell">${
+		  game.ageRange
+		    ? game.ageRange.maxAge
+		      ? `${game.ageRange.minAge} - ${game.ageRange.maxAge}`
+		      : `${game.ageRange.minAge}+`
+		    : 'N/A'
+		}</div>
+		<div class="game-cell">${game.estimatedPlayTime ? `${game.estimatedPlayTime} min` : 'N/A'}</div>
+		<div class="game-cell">${booleanToAnoNie(game.isCooperative, 'Áno aj Nie')}</div>
+		<div class="game-cell">${game.authors.length === 0 ? 'N/A' : game.authors.join(", ")}</div>
+      </div>
+      `;
+      gamesDiv.appendChild(fragment);
+    });
+
+    localStorage.setItem("lastSearch", criteria.toString());
+  }
+
+  function exportGames() {
+    const query = localStorage.getItem("lastSearch") || "";
+    window.location = `/bgs/svc/boardGame/export/?${query}`;
+  }
+
+  function viewGame(id) {
+    window.location = `detail?id=${id}`;
+  }
+
+  // Load on page open
+  searchGames();
+</script>
+</body>
+</html>

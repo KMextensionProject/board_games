@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spoločenská Hra - Detail</title>
+    <style>
+
+		table.game-details {
+		    width: 100%;
+		    border-collapse: collapse;
+		}
+
+		table.game-details td {
+		    padding: 8px;
+		    border-bottom: 1px solid #ddd;
+		}
+
+		table.game-details td:first-child {
+		    width: 150px;  /* Prvý stĺpec s názvami bude širší */
+		    font-weight: bold;
+		}
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            gap: 30px;
+        }
+        .details {
+            flex: 3; /* more space for text */
+        }
+        .video {
+            flex: 2; /* more width for video */
+            display: flex;
+            align-items: flex-start;
+        }
+        iframe {
+            width: 100%;
+            height: 400px; /* increased height */
+            border: none;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="details">Loading...</div>
+<script>
+
+	function booleanToAnoNie(booleanValue) {
+		return booleanValue(booleanValue, '');
+	}
+
+	function booleanToAnoNie(booleanValue, defaultNull) {
+		if (booleanValue === null) {
+			return defaultNull;
+		}
+		return booleanValue ? 'Áno' : 'Nie';
+	}
+
+    async function loadDetail() {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get("id");
+        const res = await fetch(`/bgs/svc/boardGame/${id}`);
+        const game = await res.json();
+		
+		// Set the document title dynamically based on the game title
+		document.title = `${game.title}`;
+
+        const div = document.getElementById("details");
+
+        // Extract YouTube ID if tutorialUrl exists
+        let videoHTML = '';
+        if (game.tutorialUrl) {
+            const videoIdMatch = game.tutorialUrl.match(/(?:youtube\.com\/.*v=|youtu\.be\/)([^&?/]+)/);
+            if (videoIdMatch && videoIdMatch[1]) {
+                const videoId = videoIdMatch[1];
+                videoHTML = `
+                    <div class="video">
+                        <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
+                    </div>
+                `;
+            }
+        }
+
+		div.innerHTML = `
+		    <div class="details">
+            <h1 style="font-size: 36px;">${game.title}</h1>
+			<table class="game-details">
+		            <tr>
+		                <td><strong>Popis:</strong></td>
+		                <td>${game.description || 'N/A'}</td>
+		            </tr>
+		            <tr>
+		                <td><strong>Počet Hráčov:</strong></td>
+						<td>
+						  ${game.minPlayers === null && game.maxPlayers === null
+						    ? 'N/A'
+						    : game.minPlayers === game.maxPlayers && game.maxPlayers !== null
+						    ? game.minPlayers
+						    : game.maxPlayers !== null
+						    ? `${game.minPlayers} - ${game.maxPlayers}`
+						    : `${game.minPlayers}+`}
+						</td>
+
+		            </tr>
+		            <tr>
+		                <td><strong>Doba Hrania:</strong></td>
+		                <td>${game.estimatedPlayTime ? `${game.estimatedPlayTime} min` : 'N/A'}</td>
+		            </tr>
+					<tr>
+					  <td><strong>Odporúčaný Vek:</strong></td>
+					  <td>${
+					    game.ageRange.minAge === null && game.ageRange.maxAge === null
+					      ? 'N/A'
+					      : game.ageRange.maxAge
+					      ? `${game.ageRange.minAge} - ${game.ageRange.maxAge}`
+					      : `${game.ageRange.minAge}+`
+					  }</td>
+					</tr>
+
+		            <tr>
+		                <td><strong>Kooperatívna:</strong></td>
+		                <td>${booleanToAnoNie(game.isCooperative, 'Áno aj Nie')}</td>
+		            </tr>
+		            <tr>
+		                <td><strong>Rozšírenie:</strong></td>
+		                <td>${booleanToAnoNie(game.isExtension)}</td>
+		            </tr>
+		            <tr>
+		                <td><strong>Jednorázová:</strong></td>
+		                <td>${booleanToAnoNie(game.canPlayOnlyOnce, 'N/A')}</td>
+		            </tr>
+		            <tr>
+		                <td><strong>Autori:</strong></td>
+		                <td>${game.authors.length === 0 ? 'N/A' : game.authors.join(", ")}</td>
+		            </tr>
+		        </table>
+		    </div>
+		    ${videoHTML}
+		`;
+
+    }
+    loadDetail();
+</script>
+</body>
+</html>

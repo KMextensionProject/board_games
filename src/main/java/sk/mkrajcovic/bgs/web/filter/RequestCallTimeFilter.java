@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -17,12 +18,20 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import sk.mkrajcovic.bgs.web.CallContext;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE - 100)
 class RequestCallTimeFilter implements Filter {
 
 	private static final Logger LOG = LoggerFactory.getLogger(RequestCallTimeFilter.class);
+
+	private CallContext callContext;
+
+	@Autowired
+	void setCallContext(final CallContext callContext) {
+		this.callContext = callContext;
+	}
 
 	@Override
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
@@ -33,7 +42,11 @@ class RequestCallTimeFilter implements Filter {
 		}
 		long startTime = System.currentTimeMillis();
 
-		LOG.info("Request start");
+		String caller = "anonymousUser".equals(callContext.getUserName())
+			? servletRequest.getRemoteHost()
+			: callContext.getUserName();
+
+		LOG.info("Request started by {}", caller);
 
 		HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
 		String method = httpServletRequest.getMethod();
