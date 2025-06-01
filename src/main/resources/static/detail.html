@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Board Game Detail</title>
+    <title>Spoločenská Hra - Detail</title>
     <style>
 
 		table.game-details {
@@ -68,7 +68,10 @@
         const id = params.get("id");
         const res = await fetch(`/bgs/svc/boardGame/${id}`);
         const game = await res.json();
-        
+		
+		// Set the document title dynamically based on the game title
+		document.title = `${game.title}`;
+
         const div = document.getElementById("details");
 
         // Extract YouTube ID if tutorialUrl exists

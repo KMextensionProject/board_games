@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Spoločenské Hry - Zoznam</title>
+  <title>Board Games</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <style>
     body {
@@ -80,7 +80,7 @@
 	}
 
 	#games-container {
-	  max-height: 700px; /* Adjust height as needed */
+	  max-height: 800px; /* Adjust height as needed */
 	  overflow-y: auto;
 	}
 
@@ -90,41 +90,6 @@
 	  top: 120px; /* Adjust based on your .filter-section height + margin */
 	  background-color: #e2e2e2;
 	  z-index: 5;
-	}
-	
-	.filter-section button {
-	  padding: 12px 16px;
-	  font-size: 14px;
-	  border-radius: 5px;
-	  width: auto;
-	  cursor: pointer;
-	  border: none;
-	  transition: all 0.3s ease;
-	}
-
-	/* Numeric input field width adjustment */
-	.filter-section input[type="number"] {
-	  width: 125px; /* Adjust the width as needed */
-	}
-	
-	/* Blue button for Search */
-	.filter-section button.search-btn {
-	  background-color: #3498db;  /* Blue */
-	  color: white;
-	}
-
-	.filter-section button.search-btn:hover {
-	  background-color: #2980b9;  /* Darker blue on hover */
-	}
-
-	/* Green button for Export */
-	.filter-section button.export-btn {
-	  background-color: #28a745;  /* Green */
-	  color: white;
-	}
-
-	.filter-section button.export-btn:hover {
-	  background-color: #218838;  /* Darker green on hover */
 	}
 
   </style>
@@ -146,8 +111,8 @@
   </select>
 
   <input type="text" id="author" placeholder="Meno autora">
-  <button class="search-btn" onclick="searchGames()">Vyhľadať</button>
-  <button class="export-btn" onclick="exportGames()">Export do XLSX</button>
+  <button onclick="searchGames()">Vyhľadať</button>
+  <button onclick="exportGames()">Export do XLSX</button>
 </div>
 
 <!-- Grid header -->
