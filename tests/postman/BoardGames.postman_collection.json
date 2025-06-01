@@ -145,7 +145,7 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"const query = pm.request.url.getQueryString;"
+									""
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -180,6 +180,626 @@
 			"name": "BoardGame",
 			"item": [
 				{
+					"name": "createBoardGame",
+					"item": [
+						{
+							"name": "positiveTests",
+							"item": [
+								{
+									"name": "1.createBoardGameWithAllParams",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const createdBoardGameLocation = pm.response.headers.get('Location');\r",
+													"console.log(createdBoardGameLocation);\r",
+													"const createdBoardGameId = createdBoardGameLocation\r",
+													"                    .substring(createdBoardGameLocation.lastIndexOf('/') + 1);\r",
+													"console.log(createdBoardGameId);\r",
+													"\r",
+													"pm.collectionVariables.set('gameID', createdBoardGameId);\r",
+													"\r",
+													"pm.test(\"Status code is 201\", () => {\r",
+													"    pm.response.to.have.status(201);\r",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{accessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"title\": \"Arkham Horror: LOVECRAFTŮV DOPIS\",\r\n  \"description\": \"Lovecraft Letter Arkham Horror je luxusným prírastkom do rodiny malých kartových hier typu Love Letter. V hre máte jednu kartu (stopu) na ruke a na začiatku ťahu si potiahnete ešte jednu. Následne sa rozhodnete, ktorú kartu zahráte a využijete jej efekt. Tentokrát sa hra odohráva v známom hororovom svete H.P. Lovecrafta, ktorý poznáme z mnohých hier (Arkham Horror, Eldritch Horror, Temné znamení, Mansion of Madness atď.)\",\r\n  \"tutorialUrl\": \"https://www.youtube.com/watch?v=XBFV0QEn31E\",\r\n  \"minPlayers\": 2,\r\n  \"maxPlayers\": 6,\r\n  \"estimatedPlayTime\": 45,\r\n  \"ageRange\": {\r\n    \"minAge\": 14,\r\n    \"maxAge\": 99\r\n  },\r\n  \"authors\": [\r\n    \"Martin Seiji Kanai\"\r\n  ],\r\n  \"isCooperative\": true,\r\n  \"canPlayOnlyOnce\": false,\r\n  \"isExtension\": false\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/boardGame",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "1. verifyGameCreatedWithAllParams",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const response = pm.response.json();\r",
+													"const responseID = response.id;\r",
+													"const responseVersion = response.version;\r",
+													"// //title nie\r",
+													"const responseDescription = response.description;\r",
+													"const responseTutorial = response.tutorialUrl;\r",
+													"const responseMinPlayers = response.minPlayers;\r",
+													"const responseMaxPlayers = response.maxPlayers;\r",
+													"const repsonseEstimatedPlayTime = response.estimatedPlayTime;\r",
+													"const responseIsCooperative = response.isCooperative;\r",
+													"const responseCanPlayOnlyOnce = response.canPlayOnlyOnce;\r",
+													"const responseIsExtension = response.isExtension;\r",
+													"const responseMinAge = response.ageRange.minAge;\r",
+													"const responseMaxAge = response.ageRange.maxAge;\r",
+													"const responseAuthors = response.authors;\r",
+													"console.log(responseID);\r",
+													"\r",
+													"//status\r",
+													"pm.test(\"Status code is 200\", () => {\r",
+													"    pm.response.to.have.status(200);\r",
+													"})\r",
+													"//ID\r",
+													"pm.test(\"Board game have ID as expected\", () => {\r",
+													"    pm.expect(parseInt(pm.collectionVariables.get('gameID'))).to.be.eql(responseID);\r",
+													"})\r",
+													"\r",
+													"//version\r",
+													"pm.test(\"Board game have version 0 as expected\", () => {\r",
+													"    pm.expect(responseVersion).to.be.eql(0);\r",
+													"})\r",
+													"\r",
+													"//description\r",
+													"pm.test(\"Board game description contains 'Arkham Horror je luxusným prírastkom do rodiny malých kartových hier typu Love Letter.'\", () => {\r",
+													"    pm.expect(responseDescription).to.contains(\"Arkham Horror je luxusným prírastkom do rodiny malých kartových hier typu Love Letter.\");\r",
+													"})\r",
+													"\r",
+													"pm.test(\"Board game description has acceptable length\", () => {\r",
+													"    pm.expect(responseDescription).to.be.an('string');\r",
+													"    pm.expect(responseDescription.length).to.be.below(500);\r",
+													"    pm.expect(responseDescription.length).to.be.above(0);\r",
+													"})\r",
+													"\r",
+													"//tutorialURL\r",
+													"pm.test(\"Board game tutorial contains 'youtube.com' and has acceptable length\", () => {\r",
+													"    pm.expect(responseTutorial).to.be.an('string');\r",
+													"    pm.expect(responseTutorial).to.contains(\"youtube.com\");\r",
+													"    pm.expect(responseTutorial.length).to.be.below(120);\r",
+													"    pm.expect(responseTutorial.length).to.be.above(0);\r",
+													"})\r",
+													"\r",
+													"\r",
+													"//minplayers - there is no upper limit\r",
+													"pm.test(\"Board game minPlayers is in range\", () => {\r",
+													"    pm.expect(responseMinPlayers).to.be.a(\"number\");\r",
+													"    // pm.expect(responseMinPlayers).to.be.below(3200);\r",
+													"    pm.expect(responseMinPlayers).to.be.above(0);\r",
+													"})\r",
+													"\r",
+													"//maxPlayers - there is no upper limit\r",
+													"pm.test(\"Board game maxPlayers is in range\", () => {\r",
+													"        pm.expect(responseMaxPlayers).to.be.a(\"number\");\r",
+													"    // pm.expect(responseMaxPlayers).to.be.below(320000);\r",
+													"    pm.expect(responseMaxPlayers).to.be.above(0);\r",
+													"})\r",
+													"\r",
+													"//extimatedPlayTime\r",
+													"pm.test(\"Board game estimated play time is in range\", () => {\r",
+													"        pm.expect(repsonseEstimatedPlayTime).to.be.a(\"number\");\r",
+													"    pm.expect(repsonseEstimatedPlayTime).to.be.above(0);\r",
+													"})\r",
+													"\r",
+													"//isCooperative\r",
+													"pm.test(\"Board game cooperative field is right boolean value\", () => {\r",
+													"    pm.expect(responseIsCooperative).to.be.an(\"boolean\");\r",
+													"    pm.expect(responseIsCooperative).to.be.true;\r",
+													"})\r",
+													"\r",
+													"//canPlayOnlyOnce\r",
+													"pm.test(\"Board game can play only once field is right boolean value\", () =>{\r",
+													"    pm.expect(responseCanPlayOnlyOnce).to.be.an(\"boolean\");\r",
+													"    pm.expect(responseCanPlayOnlyOnce).to.be.false;\r",
+													"})\r",
+													"\r",
+													"//isExtension\r",
+													"pm.test(\"Board game is extension field is right boolean value\", () =>{\r",
+													"    pm.expect(responseIsExtension).to.be.an(\"boolean\");\r",
+													"    pm.expect(responseIsExtension).to.be.false;\r",
+													"})\r",
+													"\r",
+													"//ageRange\r",
+													"pm.test(\"Board game age range is in range\", () => {\r",
+													"    pm.expect(responseMinAge).to.be.a('number');\r",
+													"    pm.expect(responseMinAge).to.be.below(18);\r",
+													"    pm.expect(responseMinAge).to.be.above(3);\r",
+													"     pm.expect(responseMaxAge).to.be.a('number');\r",
+													"    pm.expect(responseMaxAge).to.be.below(100);\r",
+													"    pm.expect(responseMaxAge).to.be.above(4);\r",
+													"})\r",
+													"\r",
+													"//authors\r",
+													"//overit ci su unique\r",
+													"pm.test(\"Board game authors field is in range\", () => {\r",
+													"    // pm.expect(responseAuthors).to.be.an('object');\r",
+													"    pm.expect(responseAuthors.length).to.be.below(10);\r",
+													"    pm.expect(responseAuthors.length).to.be.above(0);\r",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseURL}}/boardGame/:id",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{gameID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "2.createBoardGameWithTitle",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const createdBoardGameLocation = pm.response.headers.get('Location');\r",
+													"//console.log(createdBoardGameLocation);\r",
+													"const createdBoardGameId = createdBoardGameLocation\r",
+													"                    .substring(createdBoardGameLocation.lastIndexOf('/') + 1);\r",
+													"//console.log(createdBoardGameId);\r",
+													"\r",
+													"pm.collectionVariables.set('gameID', createdBoardGameId);\r",
+													"\r",
+													"pm.test(\"Status code is 201\", function () {\r",
+													"    pm.response.to.have.status(201);\r",
+													"});\r",
+													"\r",
+													"\r",
+													"\r",
+													"\r",
+													"\r",
+													"\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{accessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"title\": \"Only title\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/boardGame",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "2.createBoardGameWithTitle Copy",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const responseTitle = pm.response.json().title;\r",
+													"console.log(responseTitle);\r",
+													"\r",
+													"pm.test(\"Status code is 200\", () => {\r",
+													"    pm.response.to.have.status(200);\r",
+													"})\r",
+													"\r",
+													"pm.test(\"Title should be 'Only title'\", () =>{\r",
+													"    pm.expect(responseTitle).to.contains(\"Only title\");\r",
+													"})\r",
+													"\r",
+													"\r",
+													"\r",
+													"\r",
+													"\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{accessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/boardGame/:id",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{gameID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "negativeTests",
+							"item": [
+								{
+									"name": "createBoardGameWithNoParams",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const response = pm.response.json();\r",
+													"const message = response.message;\r",
+													"\r",
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Message contains 'title: must not be blank'\", () =>{\r",
+													"    pm.expect(message).to.contains(\"title: must not be blank\");\r",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{accessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/boardGame",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "createBoardGameWithBlakTitle",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const response = pm.response.json();\r",
+													"const message = response.message;\r",
+													"\r",
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Message contains 'title: must not be blank'\", () =>{\r",
+													"    pm.expect(message).to.contains(\"title: must not be blank\");\r",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{accessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n\"title\": \" \"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/boardGame",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "createBoardGameWithLongTitle",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const response = pm.response.json();\r",
+													"const message = response.message;\r",
+													"const requestBody = JSON.parse(pm.request.body.raw);\r",
+													"const bodyTitle = requestBody.title;\r",
+													"\r",
+													"//status\r",
+													"pm.test(\"Status code is 400\", function () {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"//message\r",
+													"pm.test(\"Message contains 'title: size must be between 0 and 50'\", () =>{\r",
+													"    pm.expect(message).to.contains(\"size must be between 0 and 50\");\r",
+													"})\r",
+													"\r",
+													"//body title \r",
+													"//length\r",
+													"c\r",
+													"\r",
+													"\r",
+													"\r",
+													"\r",
+													"\r",
+													"\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{accessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "//title have 51 characters\r\n{\r\n    \"title\": \"oyiututkjgkjghjghjghkoiujjjjjjjjjjjjjjjjjjjjjjjhhhh\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/boardGame",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "createBoardGame",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"title\": \"Arkham Horror: LOVECRAFTŮV DOPIS\",\r\n  \"description\": \"Lovecraft Letter Arkham Horror je luxusným prírastkom do rodiny malých kartových hier typu Love Letter. V hre máte jednu kartu (stopu) na ruke a na začiatku ťahu si potiahnete ešte jednu. Následne sa rozhodnete, ktorú kartu zahráte a využijete jej efekt. Tentokrát sa hra odohráva v známom hororovom svete H.P. Lovecrafta, ktorý poznáme z mnohých hier (Arkham Horror, Eldritch Horror, Temné znamení, Mansion of Madness atď.)\",\r\n  \"tutorialUrl\": \"https://www.youtube.com/watch?v=XBFV0QEn31E\",\r\n  \"minPlayers\": 2,\r\n  \"maxPlayers\": 6,\r\n  \"estimatedPlayTime\": 45,\r\n  \"ageRange\": {\r\n    \"minAge\": 14,\r\n    \"maxAge\": 99\r\n  },\r\n  \"authors\": [\r\n    \"Martin Seiji Kanai\"\r\n  ],\r\n  \"isCooperative\": true,\r\n  \"canPlayOnlyOnce\": false,\r\n  \"isExtension\": false\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/boardGame",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"boardGame"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "getBoardGameByID",
+					"item": [
+						{
+							"name": "positiveTests",
+							"item": []
+						},
+						{
+							"name": "negativeTests",
+							"item": []
+						},
+						{
+							"name": "getBoardGame",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/boardGame/:id",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"boardGame",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "66"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "getBoardGamesByCriteria",
 					"item": [
 						{
@@ -211,7 +831,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{baseURL}}/boardGame/?title=7 Divů světa: Duel",
+									"raw": "{{baseURL}}/boardGame/",
 									"host": [
 										"{{baseURL}}"
 									],
@@ -222,7 +842,8 @@
 									"query": [
 										{
 											"key": "title",
-											"value": "7 Divů světa: Duel"
+											"value": "horror",
+											"disabled": true
 										},
 										{
 											"key": "estimatedPlayTime",
@@ -269,95 +890,6 @@
 											"value": "Seiji",
 											"disabled": true
 										}
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "getBoardGameByID",
-					"item": [
-						{
-							"name": "positiveTests",
-							"item": []
-						},
-						{
-							"name": "negativeTests",
-							"item": []
-						},
-						{
-							"name": "getBoardGame",
-							"request": {
-								"auth": {
-									"type": "noauth"
-								},
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{baseURL}}/boardGame/:id",
-									"host": [
-										"{{baseURL}}"
-									],
-									"path": [
-										"boardGame",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "3"
-										}
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "createBoardGame",
-					"item": [
-						{
-							"name": "positiveTests",
-							"item": []
-						},
-						{
-							"name": "negativeTests",
-							"item": []
-						},
-						{
-							"name": "createBoardGame",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{accessToken}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"title\": \"Arkham Horror: LOVECRAFTŮV DOPIS\",\r\n  \"description\": \"Lovecraft Letter Arkham Horror je luxusným prírastkom do rodiny malých kartových hier typu Love Letter. V hre máte jednu kartu (stopu) na ruke a na začiatku ťahu si potiahnete ešte jednu. Následne sa rozhodnete, ktorú kartu zahráte a využijete jej efekt. Tentokrát sa hra odohráva v známom hororovom svete H.P. Lovecrafta, ktorý poznáme z mnohých hier (Arkham Horror, Eldritch Horror, Temné znamení, Mansion of Madness atď.)\",\r\n  \"tutorialUrl\": \"https://www.youtube.com/watch?v=XBFV0QEn31E\",\r\n  \"minPlayers\": 2,\r\n  \"maxPlayers\": 6,\r\n  \"estimatedPlayTime\": 45,\r\n  \"ageRange\": {\r\n    \"minAge\": 14,\r\n    \"maxAge\": 99\r\n  },\r\n  \"authors\": [\r\n    \"Martin Seiji Kanai\"\r\n  ],\r\n  \"isCooperative\": true,\r\n  \"canPlayOnlyOnce\": false,\r\n  \"isExtension\": false\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{baseURL}}/boardGame",
-									"host": [
-										"{{baseURL}}"
-									],
-									"path": [
-										"boardGame"
 									]
 								}
 							},
@@ -459,7 +991,7 @@
 									"variable": [
 										{
 											"key": "id",
-											"value": "44"
+											"value": "50"
 										}
 									]
 								}
@@ -685,6 +1217,11 @@
 		},
 		{
 			"key": "baseURL",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "gameID",
 			"value": "",
 			"type": "string"
 		}
