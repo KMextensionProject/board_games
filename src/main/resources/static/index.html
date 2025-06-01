@@ -130,10 +130,6 @@
   <div id="games" class="game-list"></div>
 </div>
 <script>
-	
-	function booleanToAnoNie(booleanValue) {
-		return booleanValue(booleanValue, '');
-	}
 
 	function booleanToAnoNie(booleanValue, defaultNull) {
 		if (booleanValue === null) {
@@ -141,7 +137,7 @@
 		}
 		return booleanValue ? 'Áno' : 'Nie';
 	}
-	
+
   async function searchGames() {
     const criteria = new URLSearchParams();
     if (title.value) criteria.append("title", title.value);
@@ -165,11 +161,29 @@
 	  <div class="game-cell">
 	    <a href="javascript:void(0)" class="clickable-title" onclick="viewGame(${game.id})">${game.title}</a>
 	  </div>
-        <div class="game-cell">${game.minPlayers === game.maxPlayers && game.maxPlayers !== null ? `${game.minPlayers}` : (game.maxPlayers ? `${game.minPlayers} - ${game.maxPlayers}` : `${game.minPlayers}+`)}</div>
-        <div class="game-cell">${game.ageRange.maxAge ? `${game.ageRange.minAge} - ${game.ageRange.maxAge}` : `${game.ageRange.minAge}+`}</div>
-		<div class="game-cell">${game.estimatedPlayTime ? `${game.estimatedPlayTime} min` : ''}</div>
+        
+	  <div class="game-cell">
+	    ${
+	      game.minPlayers === null && game.maxPlayers === null
+	        ? 'N/A'
+	        : game.minPlayers === game.maxPlayers && game.maxPlayers !== null
+	        ? `${game.minPlayers}`
+	        : game.maxPlayers
+	        ? `${game.minPlayers} - ${game.maxPlayers}`
+	        : `${game.minPlayers}+`
+	    }
+	  </div>
+
+		<div class="game-cell">${
+		  game.ageRange
+		    ? game.ageRange.maxAge
+		      ? `${game.ageRange.minAge} - ${game.ageRange.maxAge}`
+		      : `${game.ageRange.minAge}+`
+		    : 'N/A'
+		}</div>
+		<div class="game-cell">${game.estimatedPlayTime ? `${game.estimatedPlayTime} min` : 'N/A'}</div>
 		<div class="game-cell">${booleanToAnoNie(game.isCooperative, 'Áno aj Nie')}</div>
-		<div class="game-cell">${game.authors.join(", ")}</div>
+		<div class="game-cell">${game.authors.length === 0 ? 'N/A' : game.authors.join(", ")}</div>
       </div>
       `;
       gamesDiv.appendChild(fragment);

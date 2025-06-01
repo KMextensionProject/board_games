@@ -95,20 +95,32 @@
 		            </tr>
 		            <tr>
 		                <td><strong>Počet Hráčov:</strong></td>
-		                <td>
-		                    ${game.minPlayers === game.maxPlayers && game.maxPlayers !== null ? 
-		                        `${game.minPlayers}` : 
-		                        (game.maxPlayers ? `${game.minPlayers} - ${game.maxPlayers}` : `${game.minPlayers}+`)}
-		                </td>
+						<td>
+						  ${game.minPlayers === null && game.maxPlayers === null
+						    ? 'N/A'
+						    : game.minPlayers === game.maxPlayers && game.maxPlayers !== null
+						    ? game.minPlayers
+						    : game.maxPlayers !== null
+						    ? `${game.minPlayers} - ${game.maxPlayers}`
+						    : `${game.minPlayers}+`}
+						</td>
+
 		            </tr>
 		            <tr>
 		                <td><strong>Doba Hrania:</strong></td>
-		                <td>${game.estimatedPlayTime ? `${game.estimatedPlayTime} min` : ''}</td>
+		                <td>${game.estimatedPlayTime ? `${game.estimatedPlayTime} min` : 'N/A'}</td>
 		            </tr>
-		            <tr>
-		                <td><strong>Odporúčaný Vek:</strong></td>
-		                <td>${game.ageRange.maxAge ? `${game.ageRange.minAge} - ${game.ageRange.maxAge}` : `${game.ageRange.minAge}+`}</td>
-		            </tr>
+					<tr>
+					  <td><strong>Odporúčaný Vek:</strong></td>
+					  <td>${
+					    game.ageRange.minAge === null && game.ageRange.maxAge === null
+					      ? 'N/A'
+					      : game.ageRange.maxAge
+					      ? `${game.ageRange.minAge} - ${game.ageRange.maxAge}`
+					      : `${game.ageRange.minAge}+`
+					  }</td>
+					</tr>
+
 		            <tr>
 		                <td><strong>Kooperatívna:</strong></td>
 		                <td>${booleanToAnoNie(game.isCooperative, 'Áno aj Nie')}</td>
@@ -119,11 +131,11 @@
 		            </tr>
 		            <tr>
 		                <td><strong>Jednorázová:</strong></td>
-		                <td>${booleanToAnoNie(game.canPlayOnlyOnce)}</td>
+		                <td>${booleanToAnoNie(game.canPlayOnlyOnce, 'N/A')}</td>
 		            </tr>
 		            <tr>
 		                <td><strong>Autori:</strong></td>
-		                <td>${game.authors.join(", ")}</td>
+		                <td>${game.authors.length === 0 ? 'N/A' : game.authors.join(", ")}</td>
 		            </tr>
 		        </table>
 		    </div>
