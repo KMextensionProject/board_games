@@ -21,11 +21,12 @@ public interface BoardGameRepository extends JpaRepository<BoardGame, Long> {
 		FROM BoardGame bg
 		LEFT JOIN FETCH bg.authors a
 		WHERE (:#{#filter.title} IS NULL OR bg.titleNormalized LIKE %:#{#filter.title}%)
-		AND (:#{#filter.estimatedPlayTime} IS NULL OR bg.estimatedPlayTime = :#{#filter.estimatedPlayTime})
-		AND (:#{#filter.minPlayers} IS NULL OR bg.minPlayers = :#{#filter.minPlayers})
-		AND (:#{#filter.maxPlayers} IS NULL OR bg.maxPlayers = :#{#filter.maxPlayers})
-		AND (:#{#filter.minAge} IS NULL OR bg.ageRange.minAge = :#{#filter.minAge})
-		AND (:#{#filter.maxAge} IS NULL OR bg.ageRange.maxAge = :#{#filter.maxAge})
+		AND (:#{#filter.estimatedPlayTimeFrom} IS NULL OR bg.estimatedPlayTime >= :#{#filter.estimatedPlayTimeFrom})
+		AND (:#{#filter.estimatedPlayTimeTo} IS NULL OR bg.estimatedPlayTime <= :#{#filter.estimatedPlayTimeTo})
+		AND (:#{#filter.minPlayers} IS NULL OR bg.minPlayers >= :#{#filter.minPlayers})
+		AND (:#{#filter.maxPlayers} IS NULL OR bg.maxPlayers <= :#{#filter.maxPlayers})
+		AND (:#{#filter.minAge} IS NULL OR bg.ageRange.minAge >= :#{#filter.minAge})
+		AND (:#{#filter.maxAge} IS NULL OR bg.ageRange.maxAge <= :#{#filter.maxAge})
 		AND (:#{#filter.isCooperative} IS NULL OR bg.isCooperative = :#{#filter.isCooperative})
 		AND (:#{#filter.isExtension} IS NULL OR bg.isExtension = :#{#filter.isExtension})
 		AND (:#{#filter.canPlayOnlyOnce} IS NULL OR bg.canPlayOnlyOnce = :#{#filter.canPlayOnlyOnce})

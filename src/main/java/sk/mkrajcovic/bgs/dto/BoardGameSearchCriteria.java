@@ -8,7 +8,8 @@ import lombok.Setter;
 public class BoardGameSearchCriteria {
 
 	private String title;
-	private Integer estimatedPlayTime;
+	private Integer estimatedPlayTimeFrom;
+	private Integer estimatedPlayTimeTo;
 	private Integer minPlayers;
 	private Integer maxPlayers;
 	private Integer minAge;

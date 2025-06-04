@@ -137,7 +137,8 @@
   <input type="number" id="minPlayers" placeholder="Od počtu hráčov">
   <input type="number" id="maxPlayers" placeholder="Do počtu hráčov">
   <input type="number" id="minAge" placeholder="Od veku">
-  <input type="number" id="playTime" placeholder="Doba hrania">
+  <input type="number" id="playTimeFrom" placeholder="Od doby hrania">
+  <input type="number" id="playTimeTo" placeholder="Po dobu hrania">
   
   <select id="isCooperative">
     <option value="">Kooperatívne / Kompetitívne</option>
@@ -179,7 +180,8 @@
     if (minPlayers.value) criteria.append("minPlayers", minPlayers.value);
     if (maxPlayers.value) criteria.append("maxPlayers", maxPlayers.value);
 	if (minAge.value) criteria.append("minAge", minAge.value);
-	if (playTime.value) criteria.append("estimatedPlayTime", playTime.value);
+	if (playTimeFrom.value) criteria.append("estimatedPlayTimeFrom", playTimeFrom.value);
+	if (playTimeTo.value) criteria.append("estimatedPlayTimeTo", playTimeTo.value);
 	if (isCooperative.value) criteria.append("isCooperative", isCooperative.value);
 	if (author.value) criteria.append("author", author.value);
 

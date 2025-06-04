@@ -42,6 +42,7 @@ public class BoardGameDtoFindOut {
 
 		authors = projection.getAuthors().stream()
 			.map(AuthorProjection::getName)
+			.sorted()
 			.toList();
 	}
 }
