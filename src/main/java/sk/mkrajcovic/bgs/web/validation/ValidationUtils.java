@@ -1,4 +1,4 @@
-package sk.mkrajcovic.bgs.utils;
+package sk.mkrajcovic.bgs.web.validation;
 
 import static java.util.stream.Collectors.joining;
 

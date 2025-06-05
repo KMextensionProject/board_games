@@ -27,8 +27,8 @@ import sk.mkrajcovic.bgs.dto.BoardGameDtoOut;
 import sk.mkrajcovic.bgs.dto.BoardGameDtoUpdate;
 import sk.mkrajcovic.bgs.dto.BoardGameSearchCriteria;
 import sk.mkrajcovic.bgs.service.BoardGameService;
-import sk.mkrajcovic.bgs.utils.ValidationUtils;
 import sk.mkrajcovic.bgs.web.filter.CreatedResponseEntity;
+import sk.mkrajcovic.bgs.web.validation.ValidationUtils;
 
 @RestController
 class BoardGameController implements BoardGameApi {
