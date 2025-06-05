@@ -166,6 +166,24 @@
   <div id="games" class="game-list"></div>
 </div>
 <script>
+	function validateSearchInputs() {
+	  const minPlayersVal = parseInt(minPlayers.value);
+	  const maxPlayersVal = parseInt(maxPlayers.value);
+	  const playTimeFromVal = parseInt(playTimeFrom.value);
+	  const playTimeToVal = parseInt(playTimeTo.value);
+
+	  if (!isNaN(minPlayersVal) && !isNaN(maxPlayersVal) && minPlayersVal > maxPlayersVal) {
+	    alert("Počet hráčov: 'Od' musí byť menší alebo rovný ako 'Do'.");
+	    return false;
+	  }
+
+	  if (!isNaN(playTimeFromVal) && !isNaN(playTimeToVal) && playTimeFromVal > playTimeToVal) {
+	    alert("Doba hrania: 'Od' musí byť menšia alebo rovná ako 'Po'.");
+	    return false;
+	  }
+
+	  return true;
+	}
 
 	function booleanToAnoNie(booleanValue, defaultNull) {
 		if (booleanValue === null) {
@@ -175,6 +193,7 @@
 	}
 
   async function searchGames() {
+	if (!validateSearchInputs()) return;
     const criteria = new URLSearchParams();
     if (title.value) criteria.append("title", title.value);
     if (minPlayers.value) criteria.append("minPlayers", minPlayers.value);
@@ -230,6 +249,7 @@
   }
 
   function exportGames() {
+	if (!validateSearchInputs()) return;
     const query = localStorage.getItem("lastSearch") || "";
     window.location = `/bgs/svc/boardGame/export/?${query}`;
   }
