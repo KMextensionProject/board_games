@@ -1,9 +1,9 @@
 package sk.mkrajcovic.bgs.service;
 
 import static java.util.stream.Collectors.joining;
-import static sk.mkrajcovic.bgs.utils.BooleanUtils.ANO;
-import static sk.mkrajcovic.bgs.utils.BooleanUtils.NIE;
-import static sk.mkrajcovic.bgs.utils.BooleanUtils.toStringAnoNie;
+import static sk.mkrajcovic.bgs.utils.BooleanHelper.ANO;
+import static sk.mkrajcovic.bgs.utils.BooleanHelper.NIE;
+import static sk.mkrajcovic.bgs.utils.BooleanHelper.toStringAnoNie;
 import static sk.mkrajcovic.bgs.utils.FileNameGenerator.generateFileNameWithTimestamp;
 
 import java.io.IOException;

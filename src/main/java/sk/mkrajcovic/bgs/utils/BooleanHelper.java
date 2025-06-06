@@ -1,11 +1,11 @@
 package sk.mkrajcovic.bgs.utils;
 
-public class BooleanUtils extends org.apache.commons.lang3.BooleanUtils {
+public class BooleanHelper extends org.apache.commons.lang3.BooleanUtils {
 
 	public static final String ANO = "áno";
 	public static final String NIE = "nie";
 
-	private BooleanUtils() {
+	private BooleanHelper() {
 		throw new UnsupportedOperationException("This class was not designed to be instantiated");
 	}
 
