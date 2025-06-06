@@ -36,6 +36,7 @@ class DateTimeSerializer extends StdSerializer<LocalDateTime> {
 	public void serialize(LocalDateTime value, JsonGenerator gen, SerializerProvider provider) throws IOException {
 		if (value == null) {
 			gen.writeNull();
+			return;
 		}
 		ZonedDateTime zonedDateTime = value.atZone(ZoneOffset.UTC);
 		gen.writeString(DateTimeFormatter.ISO_DATE_TIME.format(zonedDateTime));
