@@ -51,9 +51,9 @@ class RequestLoggingFilter extends OncePerRequestFilter {
 			LOG.warn("No exclude-paths configured. All incoming JSON payloads will be logged.");
 			return List.of();
 		}
-		List<String> excludedPaths = List.copyOf(pathsToExclude);
-		LOG.info("Excluding logging for the following paths: {}", excludedPaths);
-		return excludedPaths;
+		List<String> excluded = List.copyOf(pathsToExclude);
+		LOG.info("Excluding logging for the following paths: {}", excluded);
+		return excluded;
 	}
 
 	@Override
@@ -70,8 +70,7 @@ class RequestLoggingFilter extends OncePerRequestFilter {
 		String requestUri = request.getRequestURI()
 			.substring(request.getContextPath().length());
 
-		return logger.isDebugEnabled()
-			&& SUPPORTED_HTTP_METHODS.contains(HttpMethod.valueOf(request.getMethod()))
+		return SUPPORTED_HTTP_METHODS.contains(HttpMethod.valueOf(request.getMethod()))
 			&& MediaType.APPLICATION_JSON_VALUE.equals(request.getContentType())
 			&& excludedPaths.stream()
 				.noneMatch(antPath -> pathMatcher.match(antPath, requestUri));
@@ -86,7 +85,7 @@ class RequestLoggingFilter extends OncePerRequestFilter {
 			message.append('?').append(request.getQueryString());
 		}
 		message.append(", ").append(compactJsonSafely(request.getRequestBody()));
-		logger.debug(message);
+		logger.info(message);
 	}
 
     private String compactJsonSafely(String input) {
