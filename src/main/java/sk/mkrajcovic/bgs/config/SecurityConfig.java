@@ -91,12 +91,11 @@ public class SecurityConfig {
 	 */
 	@Bean
 	JwtAuthenticationConverter jwtAuthenticationConverter() {
-		Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthConverter = jwt -> {
-			return extractRolesFromJwt(jwt)
+		Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthConverter = jwt -> 
+			extractRolesFromJwt(jwt)
 				.stream()
 				.map(role -> (GrantedAuthority) new SimpleGrantedAuthority(role))
 				.toList();
-		};
 
 		var jwtAuthConverter = new JwtAuthenticationConverter();
 		jwtAuthConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthConverter);
