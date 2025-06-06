@@ -13,4 +13,7 @@ public class UserRoles {
 	 */
 	public static final String BGS_ADMIN = "BGS_ADMIN";
 
+	private UserRoles() {
+		throw new UnsupportedOperationException("This class was not designed to be instantiated");
+	}
 }
