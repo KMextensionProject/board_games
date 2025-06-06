@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -37,7 +38,7 @@ public class SecurityConfig {
 	SecurityFilterChain securityFilterChain(HttpSecurity http, ServerProperties serverProperties) throws Exception {
         // state in access token only
         http.sessionManagement(sessionConfigurer -> sessionConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        http.csrf(c -> c.disable()); // safe because there is no session
+        http.csrf(AbstractHttpConfigurer::disable); // safe because there is no session
         http.headers(headersConfigurer -> headersConfigurer.frameOptions(FrameOptionsConfig::sameOrigin));
 
         http.oauth2ResourceServer(cfg -> cfg.jwt(Customizer.withDefaults()));
