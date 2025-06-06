@@ -41,7 +41,7 @@ class BoardGameController implements BoardGameApi {
 
 	@RolesAllowed({BGS_TESTER, BGS_ADMIN})
 	@PostMapping(path = "/boardGame", consumes = APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> createBoardGame(@RequestBody BoardGameDtoCreate createDto, BindingResult bindingResult) {
+	public ResponseEntity<Void> createBoardGame(@RequestBody BoardGameDtoCreate createDto, BindingResult bindingResult) {
 		ValidationUtils.processFieldBindingErrors(bindingResult.getFieldErrors());
 		Long id = service.createBoardGame(createDto);
 		return CreatedResponseEntity.create("/boardGame/{id}", id);

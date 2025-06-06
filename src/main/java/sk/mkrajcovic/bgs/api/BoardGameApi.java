@@ -64,7 +64,7 @@ public interface BoardGameApi {
 			)
 		)
 	)
-	public ResponseEntity<?> createBoardGame(
+	public ResponseEntity<Void> createBoardGame(
 		@Valid BoardGameDtoCreate createDto,
 		BindingResult bindingResult
 	);

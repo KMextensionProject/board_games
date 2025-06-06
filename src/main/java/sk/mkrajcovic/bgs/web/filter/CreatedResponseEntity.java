@@ -15,7 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * header pointing to the newly created resource, and automates setting the
  * {@link HttpStatus#CREATED} as the response status code.
  */
-public class CreatedResponseEntity extends ResponseEntity<Object> {
+public class CreatedResponseEntity extends ResponseEntity<Void> {
 
 	private CreatedResponseEntity(URI uri) {
 		super(buildResourceLocationHeader(uri), HttpStatus.CREATED);
