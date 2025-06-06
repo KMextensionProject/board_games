@@ -41,7 +41,8 @@ class BufferedRequestWrapper extends HttpServletRequestWrapper {
 			}
 
 			@Override
-			public void setReadListener(ReadListener listener) {}
+			public void setReadListener(ReadListener listener) { // intentionally empty, we do not use this
+			}
 		};
 	}
 
