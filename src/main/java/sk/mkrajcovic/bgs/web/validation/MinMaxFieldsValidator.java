@@ -49,7 +49,7 @@ public class MinMaxFieldsValidator implements ConstraintValidator<MinMaxFields, 
 			boolean valid = strict ? firstValue < secondValue : firstValue <= secondValue;
 			if (!valid) {
 				// when we're using a class-level constraint like @MinMaxFields, we must manually
-				// attach a constraint violation to a specific property or to the object itself;
+				// attach a constraint violation to a specific property or to the object itself,
 				// otherwise Spring won't know what to do with it, even if isValid(...) returns false
 				context.disableDefaultConstraintViolation();
 				context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
@@ -60,7 +60,7 @@ public class MinMaxFieldsValidator implements ConstraintValidator<MinMaxFields, 
 			return valid;
 
 		} catch (NoSuchFieldException | IllegalAccessException error) {
-			// programmer error; can happen when the property is wrongly specified
+			// programmer error, can happen when the property is wrongly specified
 			throw new InfrastructureException(
 				MessageCodeConstants.ERROR,
 				"Error accessing fields in MinMaxFieldsValidator",
