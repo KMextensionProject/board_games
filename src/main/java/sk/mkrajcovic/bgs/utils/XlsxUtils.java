@@ -154,7 +154,7 @@ public class XlsxUtils {
 			try {
 				applyDataToRow(sheet, currentRowIndex[0]++, placeholders, data);
 			} catch (Exception e) {
-				throw new RuntimeException("Error applying transformation for streamed data", e);
+				throw new InfrastructureException("Error applying transformation for streamed data", e);
 			}
 		});
 
