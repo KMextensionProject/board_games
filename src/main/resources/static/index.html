@@ -33,7 +33,7 @@
 
     .game-list {
       display: grid;
-      grid-template-columns: 3fr 1fr 1fr 1fr 1fr 3fr;
+      grid-template-columns: 3fr 1fr 1fr 1fr 1fr 1fr 3fr;
       gap: 10px;
       margin-top: 20px;
       align-items: center;
@@ -146,6 +146,7 @@
     <option value="false">Kompetitívne</option>
   </select>
 
+  <input type="number" id="year" placeholder="Rok vydania">
   <input type="text" id="author" placeholder="Meno autora">
   <button class="search-btn" onclick="searchGames()">Vyhľadať</button>
   <button class="export-btn" onclick="exportGames()">Export do XLSX</button>
@@ -158,6 +159,9 @@
   <div class="grid-header">Odporúčaný vek</div>
   <div class="grid-header">Doba hrania</div>
   <div class="grid-header">Kooperatívna</div>
+  
+  <div class="grid-header">Rok vydania</div>
+  
   <div class="grid-header">Autori</div>
 </div>
 
@@ -202,6 +206,7 @@
 	if (playTimeFrom.value) criteria.append("estimatedPlayTimeFrom", playTimeFrom.value);
 	if (playTimeTo.value) criteria.append("estimatedPlayTimeTo", playTimeTo.value);
 	if (isCooperative.value) criteria.append("isCooperative", isCooperative.value);
+	if (year.value) criteria.append("year", year.value);
 	if (author.value) criteria.append("author", author.value);
 
     const res = await fetch(`/bgs/svc/boardGame/?${criteria.toString()}`);
@@ -239,6 +244,7 @@
 		}</div>
 		<div class="game-cell">${game.estimatedPlayTime ? `${game.estimatedPlayTime} min` : 'N/A'}</div>
 		<div class="game-cell">${booleanToAnoNie(game.isCooperative, 'Áno aj Nie')}</div>
+		<div class="game-cell">${game.year ? `${game.year}` : 'N/A'}</div>
 		<div class="game-cell">${game.authors.length === 0 ? 'N/A' : game.authors.join(", ")}</div>
       </div>
       `;
