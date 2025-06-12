@@ -30,6 +30,7 @@ public interface BoardGameRepository extends JpaRepository<BoardGame, Long> {
 		AND (:#{#filter.isCooperative} IS NULL OR (bg.isCooperative IS NULL OR bg.isCooperative = :#{#filter.isCooperative}))
 		AND (:#{#filter.isExtension} IS NULL OR bg.isExtension = :#{#filter.isExtension})
 		AND (:#{#filter.canPlayOnlyOnce} IS NULL OR bg.canPlayOnlyOnce = :#{#filter.canPlayOnlyOnce})
+		AND (:#{#filter.year} IS NULL OR bg.yearPublished <= :#{#filter.year})
 		AND (:#{#filter.author} IS NULL OR EXISTS (
 			 SELECT 1
 			 FROM bg.authors a
@@ -57,6 +58,7 @@ public interface BoardGameRepository extends JpaRepository<BoardGame, Long> {
 		Boolean getCanPlayOnlyOnce();
 		Boolean getIsExtension();
 		String getTutorialUrl();
+		Integer getYearPublished();
 		AgeRangeProjection getAgeRange();
 		List<AuthorProjection> getAuthors();
 	}

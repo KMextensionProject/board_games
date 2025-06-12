@@ -95,6 +95,7 @@ public class BoardGameService {
 		boardGame.setIsCooperative(dtoIn.getIsCooperative());
 		boardGame.setIsExtension(dtoIn.getIsExtension());
 		boardGame.setTutorialUrl(dtoIn.getTutorialUrl());
+		boardGame.setYearPublished(dtoIn.getYear());
 		boardGame.setAgeRange(dtoIn.getAgeRange() != null ? dtoIn.getAgeRange().asEntity() : null);
 		/*
 		 * Avoid detection of false-positive dirty checks in Hibernate.

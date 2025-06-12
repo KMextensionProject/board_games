@@ -31,6 +31,7 @@ public class BoardGameDtoOut {
 	private Boolean isCooperative;
 	private Boolean canPlayOnlyOnce;
 	private Boolean isExtension;
+	private Integer year;
 	private AgeRangeDtoOut ageRange;
 	private List<String> authors;
 
@@ -60,6 +61,7 @@ public class BoardGameDtoOut {
 		isCooperative = boardGame.getIsCooperative();
 		canPlayOnlyOnce = boardGame.getCanPlayOnlyOnce();
 		isExtension = boardGame.getIsExtension();
+		year = boardGame.getYearPublished();
 		ageRange = new AgeRangeDtoOut(boardGame.getAgeRange());
 		authors = boardGame.getAuthors().stream()
 			.map(Author::getName)

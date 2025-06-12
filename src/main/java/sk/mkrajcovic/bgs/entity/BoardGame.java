@@ -26,7 +26,7 @@ public class BoardGame extends BaseEntity {
 
 	@Setter(AccessLevel.NONE)
 	@Version
-	private long version;
+	private long version; // TODO: change to int 
 
 	@Column(nullable = false, length = 50)
 	private String title;
@@ -42,6 +42,7 @@ public class BoardGame extends BaseEntity {
 	private Integer maxPlayers;
 	private Boolean isCooperative;
 	private Boolean canPlayOnlyOnce;
+	private Integer yearPublished;
 
 	@Column(nullable = false)
 	private Boolean isExtension;

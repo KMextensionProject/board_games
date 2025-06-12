@@ -49,6 +49,7 @@ public interface BoardGameApi {
 						"minPlayers": 1,
 						"maxPlayers": 4,
 						"estimatedPlayTime": 15,
+						"year": 2018,
 						"ageRange": {
 							"minAge": 6,
 							"maxAge": 99

@@ -21,6 +21,7 @@ public class BoardGameDtoFindOut {
 	private Boolean isCooperative;
 	private Boolean canPlayOnlyOnce;
 	private Boolean isExtension;
+	private Integer year;
 	private AgeRangeDtoOut ageRange;
 	private List<String> authors;
 
@@ -33,6 +34,7 @@ public class BoardGameDtoFindOut {
 		isCooperative = projection.getIsCooperative();
 		canPlayOnlyOnce = projection.getCanPlayOnlyOnce();
 		isExtension = projection.getIsExtension();
+		year = projection.getYearPublished();
 
 		if (projection.getAgeRange() != null) {
 			ageRange = new AgeRangeDtoOut();

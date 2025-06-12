@@ -12,6 +12,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import sk.mkrajcovic.bgs.web.validation.MinMaxFields;
+import sk.mkrajcovic.bgs.web.validation.Year;
 import sk.mkrajcovic.bgs.web.validation.YouTubeUrl;
 
 @Getter
@@ -34,6 +35,10 @@ public class BoardGameDtoCreate implements BoardGameDtoIn {
 	@Positive
 	@Schema(description = "play time in minutes")
 	private Integer estimatedPlayTime;
+
+	@Year
+	@Schema(description = "value between 1970 and the current year (both inclusive)")
+	private Integer year;
 
 	@Valid
 	private AgeRangeDtoCreate ageRange;

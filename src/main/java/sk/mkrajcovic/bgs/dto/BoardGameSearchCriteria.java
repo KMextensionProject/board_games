@@ -18,4 +18,5 @@ public class BoardGameSearchCriteria {
 	private Boolean canPlayOnlyOnce;
 	private Boolean isExtension;
 	private String author;
+	private Integer year;
 }

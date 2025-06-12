@@ -15,4 +15,5 @@ public interface BoardGameDtoIn {
 	Boolean getCanPlayOnlyOnce();
 	Boolean getIsExtension();
 	String getTutorialUrl();
+	Integer getYear();
 }
