@@ -14,6 +14,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Version;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,5 +42,9 @@ public abstract class BaseEntity {
 
 	@LastModifiedBy
 	private String modifiedBy;
+
+	@Setter(AccessLevel.NONE)
+	@Version
+	private int version;
 
 }

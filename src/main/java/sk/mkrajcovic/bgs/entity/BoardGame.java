@@ -11,7 +11,6 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Version;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,10 +22,6 @@ import sk.mkrajcovic.bgs.utils.StringNormalizer;
 @Setter
 @Entity
 public class BoardGame extends BaseEntity {
-
-	@Setter(AccessLevel.NONE)
-	@Version
-	private long version; // TODO: change to int 
 
 	@Column(nullable = false, length = 50)
 	private String title;

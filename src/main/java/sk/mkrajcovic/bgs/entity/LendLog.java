@@ -8,6 +8,9 @@ import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
+// improvement thoughts:
+// 1. due_date + notifications
+// 2. generate reports/statistics
 @Getter
 @Setter
 @Entity

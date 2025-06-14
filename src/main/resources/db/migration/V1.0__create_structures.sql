@@ -37,7 +37,7 @@ CREATE TABLE board_game (
     is_extension BOOLEAN NOT NULL,
     tutorial_url VARCHAR(120),
     year_published INTEGER,
-    version BIGINT NOT NULL,
+    version INTEGER NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at TIMESTAMP,
     created_by VARCHAR(50),
@@ -50,7 +50,8 @@ CREATE TABLE author (
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at TIMESTAMP,
     created_by VARCHAR(50),
-    modified_by VARCHAR(50)
+    modified_by VARCHAR(50),
+    version INTEGER NOT NULL
 );
 CREATE TABLE board_game_author (
     board_game_id BIGINT REFERENCES board_game(id) ON DELETE CASCADE,
@@ -64,7 +65,8 @@ CREATE TABLE borrower (
     created_by VARCHAR(50),
     modified_by VARCHAR(50),
     name VARCHAR(50) NOT NULL,
-    email VARCHAR(50)
+    email VARCHAR(50),
+    version INTEGER NOT NULL
 );
 CREATE TABLE lend_log (
     id BIGSERIAL PRIMARY KEY,
@@ -76,7 +78,8 @@ CREATE TABLE lend_log (
     borrower_id BIGINT REFERENCES borrower(id) ON DELETE SET NULL,
     lend_date DATE NOT NULL DEFAULT NOW(),
     return_date DATE,
-    notes VARCHAR(255)
+    notes VARCHAR(255),
+    version INTEGER NOT NULL
 );
 CREATE INDEX idx_board_game_title ON board_game(title);
 CREATE INDEX idx_board_game_title_normalized ON board_game(title_normalized);
