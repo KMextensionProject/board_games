@@ -97,7 +97,7 @@
 		                <td>${game.description || 'N/A'}</td>
 		            </tr>
 		            <tr>
-		                <td><strong>Počet Hráčov:</strong></td>
+		                <td><strong>Počet hráčov:</strong></td>
 						<td>
 						  ${game.minPlayers === null && game.maxPlayers === null
 						    ? 'N/A'
@@ -110,11 +110,11 @@
 
 		            </tr>
 		            <tr>
-		                <td><strong>Doba Hrania:</strong></td>
+		                <td><strong>Doba hrania:</strong></td>
 		                <td>${game.estimatedPlayTime ? `${game.estimatedPlayTime} min` : 'N/A'}</td>
 		            </tr>
 					<tr>
-					  <td><strong>Odporúčaný Vek:</strong></td>
+					  <td><strong>Odporúčaný vek:</strong></td>
 					  <td>${
 					    game.ageRange.minAge === null && game.ageRange.maxAge === null
 					      ? 'N/A'
@@ -136,6 +136,10 @@
 		                <td><strong>Jednorázová:</strong></td>
 		                <td>${booleanToAnoNie(game.canPlayOnlyOnce, 'N/A')}</td>
 		            </tr>
+					<tr>
+					    <td><strong>Rok vydania:</strong></td>
+					    <td>${game.year ? game.year : 'N/A'}</td>
+					</tr>
 		            <tr>
 		                <td><strong>Autori:</strong></td>
 		                <td>${game.authors.length === 0 ? 'N/A' : game.authors.join(", ")}</td>
