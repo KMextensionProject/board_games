@@ -224,7 +224,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n  \"title\": \"Arkham Horror: LOVECRAFTŮV DOPIS\",\r\n  \"description\": \"Lovecraft Letter Arkham Horror je luxusným prírastkom do rodiny malých kartových hier typu Love Letter. V hre máte jednu kartu (stopu) na ruke a na začiatku ťahu si potiahnete ešte jednu. Následne sa rozhodnete, ktorú kartu zahráte a využijete jej efekt. Tentokrát sa hra odohráva v známom hororovom svete H.P. Lovecrafta, ktorý poznáme z mnohých hier (Arkham Horror, Eldritch Horror, Temné znamení, Mansion of Madness atď.)\",\r\n  \"tutorialUrl\": \"https://www.youtube.com/watch?v=XBFV0QEn31E\",\r\n  \"minPlayers\": 2,\r\n  \"maxPlayers\": 6,\r\n  \"estimatedPlayTime\": 45,\r\n  \"ageRange\": {\r\n    \"minAge\": 14,\r\n    \"maxAge\": 99\r\n  },\r\n  \"authors\": [\r\n    \"Martin Seiji Kanai\"\r\n  ],\r\n  \"isCooperative\": true,\r\n  \"canPlayOnlyOnce\": false,\r\n  \"isExtension\": false\r\n}",
+											"raw": "{\r\n  \"title\": \"Arkham Horror: LOVECRAFTŮV DOPIS\",\r\n  \"description\": \"Lovecraft Letter Arkham Horror je luxusným prírastkom do rodiny malých kartových hier typu Love Letter. V hre máte jednu kartu (stopu) na ruke a na začiatku ťahu si potiahnete ešte jednu. Následne sa rozhodnete, ktorú kartu zahráte a využijete jej efekt. Tentokrát sa hra odohráva v známom hororovom svete H.P. Lovecrafta, ktorý poznáme z mnohých hier (Arkham Horror, Eldritch Horror, Temné znamení, Mansion of Madness atď.)\",\r\n  \"tutorialUrl\": \"https://www.youtube.com/watch?v=XBFV0QEn31E\",\r\n  \"minPlayers\": 2,\r\n  \"maxPlayers\": 6,\r\n  \"estimatedPlayTime\": 45,\r\n  \"ageRange\": {\r\n    \"minAge\": 14,\r\n    \"maxAge\": 99\r\n  },\r\n  \"authors\": [\r\n    \"Martin Seiji Kanai\"\r\n  ],\r\n  \"isCooperative\": true,\r\n  \"canPlayOnlyOnce\": false,\r\n  \"isExtension\": false,\r\n  \"year\": 2019\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -250,6 +250,13 @@
 											"listen": "test",
 											"script": {
 												"exec": [
+													"//ulozenie cisla verzie\r",
+													"const version = pm.response.json().version;\r",
+													"console.log(version);\r",
+													"pm.collectionVariables.set(\"gameVersion\", version);\r",
+													"\r",
+													"\r",
+													"\r",
 													"const response = pm.response.json();\r",
 													"const responseID = response.id;\r",
 													"const responseVersion = response.version;\r",
@@ -265,6 +272,7 @@
 													"const responseMinAge = response.ageRange.minAge;\r",
 													"const responseMaxAge = response.ageRange.maxAge;\r",
 													"const responseAuthors = response.authors;\r",
+													"const responseYear = response.year;\r",
 													"console.log(responseID);\r",
 													"\r",
 													"//status\r",
@@ -355,7 +363,15 @@
 													"    // pm.expect(responseAuthors).to.be.an('object');\r",
 													"    pm.expect(responseAuthors.length).to.be.below(10);\r",
 													"    pm.expect(responseAuthors.length).to.be.above(0);\r",
-													"})"
+													"})\r",
+													"\r",
+													"pm.test(\"Board game year of publition field is in range\", () => {\r",
+													"    pm.expect(responseYear).to.be.a('number');\r",
+													"    pm.expect(responseYear).to.be.below(2025);\r",
+													"    pm.expect(responseYear).to.be.above(1970);\r",
+													"})\r",
+													"\r",
+													"//pridat kto to vytvoril"
 												],
 												"type": "text/javascript",
 												"packages": {}
@@ -532,6 +548,49 @@
 						{
 							"name": "negativeTests",
 							"item": [
+								{
+									"name": "1.createBoardGameWithoutAuth",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", () => {\r",
+													"    pm.response.to.have.status(401);\r",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"title\": \"Arkham Horror: LOVECRAFTŮV DOPIS\",\r\n  \"description\": \"Lovecraft Letter Arkham Horror je luxusným prírastkom do rodiny malých kartových hier typu Love Letter. V hre máte jednu kartu (stopu) na ruke a na začiatku ťahu si potiahnete ešte jednu. Následne sa rozhodnete, ktorú kartu zahráte a využijete jej efekt. Tentokrát sa hra odohráva v známom hororovom svete H.P. Lovecrafta, ktorý poznáme z mnohých hier (Arkham Horror, Eldritch Horror, Temné znamení, Mansion of Madness atď.)\",\r\n  \"tutorialUrl\": \"https://www.youtube.com/watch?v=XBFV0QEn31E\",\r\n  \"minPlayers\": 2,\r\n  \"maxPlayers\": 6,\r\n  \"estimatedPlayTime\": 45,\r\n  \"ageRange\": {\r\n    \"minAge\": 14,\r\n    \"maxAge\": 99\r\n  },\r\n  \"authors\": [\r\n    \"Martin Seiji Kanai\"\r\n  ],\r\n  \"isCooperative\": true,\r\n  \"canPlayOnlyOnce\": false,\r\n  \"isExtension\": false\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/boardGame",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame"
+											]
+										}
+									},
+									"response": []
+								},
 								{
 									"name": "createBoardGameWithNoParams",
 									"event": [
@@ -790,7 +849,7 @@
 									"variable": [
 										{
 											"key": "id",
-											"value": "66"
+											"value": "{{gameID}}"
 										}
 									]
 								}
@@ -902,11 +961,940 @@
 					"item": [
 						{
 							"name": "positiveTests",
-							"item": []
+							"item": [
+								{
+									"name": "updateBoardGameFullyFilledParams",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const response = pm.response.json();\r",
+													"const version = response.version;\r",
+													"\r",
+													"\r",
+													"\r",
+													"\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{accessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"version\":{{gameVersion}},\r\n    \"title\": \"1. Arkham Horror: LOVECRAFTŮV DOPIS\",\r\n    \"description\": \"1. UPDATE description pola\",\r\n    \"tutorialUrl\": \"https://www.youtube.com/watch?v=XBFV0QEn31E111.\",\r\n    \"minPlayers\": 3,\r\n    \"maxPlayers\": 7,\r\n    \"estimatedPlayTime\": 60,\r\n    \"isCooperative\": false,\r\n    \"canPlayOnlyOnce\": true,\r\n    \"isExtension\": true,\r\n    \"ageRange\": {\r\n        \"minAge\": 15,\r\n        \"maxAge\": 100\r\n    },\r\n    \"year\": 1988,\r\n    \"authors\": [\r\n        \"Martin Seiji Kanai\",\r\n        \"Sergio Perez\"\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/boardGame/:id",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{gameID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "verifyUpdateGameWithFullyFilledParams",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//version musi byt 1\r",
+													"//zmenene description\r",
+													"const response = pm.response.json();\r",
+													"const version = response.version;\r",
+													"\r",
+													"const updatedAuthors = [\r",
+													"        \"Martin Seiji Kanai\",\r",
+													"        \"Sergio Perez\"\r",
+													"    ]\r",
+													"\r",
+													"pm.collectionVariables.set(\"gameVersion\", version );\r",
+													"\r",
+													"pm.test(\"Status code is 200\", () => {\r",
+													"    pm.response.to.have.status(200)\r",
+													"})\r",
+													"\r",
+													"// pm.test(\"ID of updated game agrees\", () => {\r",
+													"//     pm.expect(response.id).to.be(pm.collectionVariables.get(gameID));\r",
+													"// })\r",
+													"\r",
+													"pm.test(\"Title field is updated\", () => {\r",
+													"    pm.expect(response.title).to.eqls(\"1. Arkham Horror: LOVECRAFTŮV DOPIS\");\r",
+													"})\r",
+													"\r",
+													"pm.test(\"Description field is updated\", () => {\r",
+													"    pm.expect(response.description).to.eqls(\"1. UPDATE description pola\");\r",
+													"})\r",
+													"pm.test(\"TutorialURL field is updated\", () => {\r",
+													"    pm.expect(response.tutorialUrl).to.eqls(\"https://www.youtube.com/watch?v=XBFV0QEn31E111.\");\r",
+													"})\r",
+													"pm.test(\"MinPlayers field is updated\", () => {\r",
+													"    pm.expect(response.minPlayers).to.eqls(3);\r",
+													"})\r",
+													"pm.test(\"MaxPlayers field is updated\", () => {\r",
+													"    pm.expect(response.maxPlayers).to.eqls(7);\r",
+													"})\r",
+													"\r",
+													"pm.test(\"EstimatedPlayTime field is updated\", () => {\r",
+													"    pm.expect(response.estimatedPlayTime).to.eqls(60);\r",
+													"})\r",
+													"\r",
+													"pm.test(\"isCooperative field is updated\", () => {\r",
+													"    pm.expect(response.isCooperative).to.be.false;\r",
+													"})\r",
+													"pm.test(\"canPlayOnlyOnce field is updated\", () => {\r",
+													"    pm.expect(response.canPlayOnlyOnce).to.be.true;\r",
+													"})\r",
+													"pm.test(\"isExtension field is updated\", () => {\r",
+													"    pm.expect(response.isExtension).to.be.true;\r",
+													"})\r",
+													"pm.test(\"ageRange field is updated\", () => {\r",
+													"    pm.expect(response.ageRange.minAge).to.eqls(15);\r",
+													"     pm.expect(response.ageRange.maxAge).to.eqls(100);\r",
+													"})\r",
+													"pm.test(\"year of publication field is updated\", () => {\r",
+													"    pm.expect(response.year).to.eqls(1988);\r",
+													"})\r",
+													"pm.test(\"Authors field is updated\", () => {\r",
+													"    pm.expect(response.authors).to.contains(updatedAuthors[0]);\r",
+													"    pm.expect(response.authors).to.contains(updatedAuthors[1]);\r",
+													"})\r",
+													"\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseURL}}/boardGame/:id",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{gameID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "updateBoardGameOnlyRequiredParams",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//verzia je uz 2 stale sa nevysuje o 1"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{accessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"version\":{{gameVersion}} ,\r\n    \"title\": \"2.Arkham Horror: LOVECRAFTŮV DOPIS <3\",\r\n    \"minPlayers\": 4,\r\n    \"maxPlayers\": 8,\r\n    \"estimatedPlayTime\": 100,\r\n    \"canPlayOnlyOnce\": false,\r\n    \"isExtension\": false,\r\n    \"ageRange\": {\r\n        \"minAge\": 16,\r\n        \"maxAge\": 50\r\n    },\r\n    \"authors\": [\r\n        \"Martin Seiji Kanai\"\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/boardGame/:id",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{gameID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "verifyUpdateGameWithRequiredParamsParams",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"//version musi byt 1\r",
+													"//zmenene description\r",
+													"const response = pm.response.json();\r",
+													"const version = response.version;\r",
+													"\r",
+													"pm.collectionVariables.set(\"gameVersion\", version );\r",
+													"\r",
+													"pm.test(\"Status code is 200\", () => {\r",
+													"    pm.response.to.have.status(200);\r",
+													"})\r",
+													"\r",
+													"pm.test(\"Title field is updated\", () => {\r",
+													"    pm.expect(response.title).to.eqls(\"2.Arkham Horror: LOVECRAFTŮV DOPIS <3\");\r",
+													"})\r",
+													"\r",
+													"pm.test(\"Description field is updated\", () => {\r",
+													"    pm.expect(response.description).to.be.null;\r",
+													"})\r",
+													"pm.test(\"TutorialURL field is updated\", () => {\r",
+													"    pm.expect(response.tutorialUrl).to.be.null;\r",
+													"})\r",
+													"pm.test(\"MinPlayers field is updated\", () => {\r",
+													"    pm.expect(response.minPlayers).to.eqls(4);\r",
+													"})\r",
+													"pm.test(\"MaxPlayers field is updated\", () => {\r",
+													"    pm.expect(response.maxPlayers).to.eqls(8);\r",
+													"})\r",
+													"\r",
+													"pm.test(\"EstimatedPlayTime field is updated\", () => {\r",
+													"    pm.expect(response.estimatedPlayTime).to.eqls(100);\r",
+													"})\r",
+													"\r",
+													"pm.test(\"canPlayOnlyOnce field is updated\", () => {\r",
+													"    pm.expect(response.canPlayOnlyOnce).to.be.false;\r",
+													"})\r",
+													"pm.test(\"isExtension field is updated\", () => {\r",
+													"    pm.expect(response.isExtension).to.be.false;\r",
+													"})\r",
+													"pm.test(\"ageRange field is updated\", () => {\r",
+													"    pm.expect(response.ageRange.minAge).to.eqls(16);\r",
+													"     pm.expect(response.ageRange.maxAge).to.eqls(50);\r",
+													"})\r",
+													"pm.test(\"Authors field is updated\", () => {\r",
+													"    pm.expect(response.authors[0]).to.eqls(\"Martin Seiji Kanai\");\r",
+													"    \r",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseURL}}/boardGame/:id",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{gameID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
 						},
 						{
 							"name": "negativeTests",
-							"item": []
+							"item": [
+								{
+									"name": "updateBoardGameWithoutAuth",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", () => {\r",
+													"    pm.response.to.have.status(401);\r",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"version\":{{gameVersion}} ,\r\n    \"title\": \"2.Arkham Horror: LOVECRAFTŮV DOPIS <3\",\r\n    \"minPlayers\": 4,\r\n    \"maxPlayers\": 8,\r\n    \"estimatedPlayTime\": 100,\r\n    \"canPlayOnlyOnce\": false,\r\n    \"isExtension\": false,\r\n    \"ageRange\": {\r\n        \"minAge\": 16,\r\n        \"maxAge\": 50\r\n    },\r\n    \"authors\": [\r\n        \"Martin Seiji Kanai\"\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/boardGame/:id",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{gameID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "updateBoardGameWithoutTitle",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const response = pm.response.json();\r",
+													"\r",
+													"\r",
+													"pm.test(\"Status code is 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"})\r",
+													"\r",
+													"pm.test(\"Error message contains 'title: must not be blank'\", () => {\r",
+													"    pm.expect(response.message).to.contain(\"title: must not be blank\");\r",
+													"})\r",
+													"\r",
+													"\r",
+													"\r",
+													"\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{accessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"version\":{{gameVersion}},\r\n    \"description\": \"1. UPDATE description pola\",\r\n    \"tutorialUrl\": \"https://www.youtube.com/watch?v=XBFV0QEn31E111.\",\r\n    \"minPlayers\": 3,\r\n    \"maxPlayers\": 7,\r\n    \"estimatedPlayTime\": 60,\r\n    \"isCooperative\": false,\r\n    \"canPlayOnlyOnce\": true,\r\n    \"isExtension\": true,\r\n    \"ageRange\": {\r\n        \"minAge\": 15,\r\n        \"maxAge\": 100\r\n    },\r\n    \"authors\": [\r\n        \"Martin Seiji Kanai\",\r\n        \"Sergio Perez\"\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/boardGame/:id",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{gameID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "updateBoardGameWithoutMinPlayers",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const response = pm.response.json();\r",
+													"\r",
+													"pm.test(\"Status code is 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"})\r",
+													"\r",
+													"pm.test(\"Error message contains 'minPlayers: must not be null'\", () => {\r",
+													"    pm.expect(response.message).to.eqls(\"minPlayers: must not be null\");\r",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{accessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"version\":{{gameVersion}} ,\r\n    \"title\": \"2.Arkham Horror: LOVECRAFTŮV DOPIS <3\",\r\n    \"maxPlayers\": 8,\r\n    \"estimatedPlayTime\": 100,\r\n    \"canPlayOnlyOnce\": false,\r\n    \"isExtension\": false,\r\n    \"ageRange\": {\r\n        \"minAge\": 16,\r\n        \"maxAge\": 50\r\n    },\r\n    \"authors\": [\r\n        \"Martin Seiji Kanai\"\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/boardGame/:id",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{gameID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "updateBoardGameWithoutMaxPlayers",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const response = pm.response.json();\r",
+													"\r",
+													"pm.test(\"Status code is 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"})\r",
+													"\r",
+													"pm.test(\"Error message contains 'maxPlayers: must not be null'\", () => {\r",
+													"    pm.expect(response.message).to.eqls(\"maxPlayers: must not be null\");\r",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{accessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"version\":{{gameVersion}} ,\r\n    \"title\": \"2.Arkham Horror: LOVECRAFTŮV DOPIS <3\",\r\n    \"minPlayers\": 4,\r\n    \"estimatedPlayTime\": 100,\r\n    \"canPlayOnlyOnce\": false,\r\n    \"isExtension\": false,\r\n    \"ageRange\": {\r\n        \"minAge\": 16,\r\n        \"maxAge\": 50\r\n    },\r\n    \"authors\": [\r\n        \"Martin Seiji Kanai\"\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/boardGame/:id",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{gameID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "updateBoardGameWithoutEstimatedPlayTime",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const response = pm.response.json();\r",
+													"\r",
+													"pm.test(\"Status code is 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"})\r",
+													"\r",
+													"pm.test(\"Error message contains 'estimatedPlayTime: must not be null'\", () => {\r",
+													"    pm.expect(response.message).to.eqls(\"estimatedPlayTime: must not be null\");\r",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{accessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"version\":{{gameVersion}} ,\r\n    \"title\": \"2.Arkham Horror: LOVECRAFTŮV DOPIS <3\",\r\n    \"minPlayers\": 4,\r\n    \"maxPlayers\": 8,\r\n    \"canPlayOnlyOnce\": false,\r\n    \"isExtension\": false,\r\n    \"ageRange\": {\r\n        \"minAge\": 16,\r\n        \"maxAge\": 50\r\n    },\r\n    \"authors\": [\r\n        \"Martin Seiji Kanai\"\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/boardGame/:id",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{gameID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "updateBoardGameWithoutAgeRange",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const response = pm.response.json();\r",
+													"\r",
+													"pm.test(\"Status code is 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"})\r",
+													"\r",
+													"pm.test(\"Error message contains 'ageRange: must not be null'\", () => {\r",
+													"    pm.expect(response.message).to.eqls(\"ageRange: must not be null\");\r",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{accessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"version\":{{gameVersion}} ,\r\n    \"title\": \"2.Arkham Horror: LOVECRAFTŮV DOPIS <3\",\r\n    \"minPlayers\": 4,\r\n    \"maxPlayers\": 8,\r\n    \"estimatedPlayTime\": 100,\r\n    \"canPlayOnlyOnce\": false,\r\n    \"isExtension\": false,\r\n    \"authors\": [\r\n        \"Martin Seiji Kanai\"\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/boardGame/:id",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{gameID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "updateBoardGameWithoutAuthors",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const response = pm.response.json();\r",
+													"\r",
+													"pm.test(\"Status code is 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"})\r",
+													"\r",
+													"pm.test(\"Error message contains 'authors: size must be between 1 and 10'\", () => {\r",
+													"    pm.expect(response.message).to.eqls(\"authors: size must be between 1 and 10\");\r",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{accessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"version\":{{gameVersion}} ,\r\n    \"title\": \"2.Arkham Horror: LOVECRAFTŮV DOPIS <3\",\r\n    \"minPlayers\": 4,\r\n    \"maxPlayers\": 8,\r\n    \"estimatedPlayTime\": 100,\r\n    \"canPlayOnlyOnce\": false,\r\n    \"isExtension\": false,\r\n    \"ageRange\": {\r\n        \"minAge\": 16,\r\n        \"maxAge\": 50\r\n    }   \r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/boardGame/:id",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{gameID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "updateBoardGameCanPlayOnlyOnce",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const response = pm.response.json();\r",
+													"\r",
+													"pm.test(\"Status code is 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"})\r",
+													"\r",
+													"pm.test(\"Error message contains 'canPlayOnlyOnce: must not be null'\", () => {\r",
+													"    pm.expect(response.message).to.eqls(\"canPlayOnlyOnce: must not be null\");\r",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{accessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"version\":{{gameVersion}} ,\r\n    \"title\": \"2.Arkham Horror: LOVECRAFTŮV DOPIS <3\",\r\n    \"minPlayers\": 4,\r\n    \"maxPlayers\": 8,\r\n    \"estimatedPlayTime\": 100,\r\n    \"isExtension\": false,\r\n    \"ageRange\": {\r\n        \"minAge\": 16,\r\n        \"maxAge\": 50\r\n    },\r\n    \"authors\": [\r\n        \"Martin Seiji Kanai\"\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/boardGame/:id",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{gameID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "updateBoardGameIsExtension",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const response = pm.response.json();\r",
+													"\r",
+													"pm.test(\"Status code is 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"})\r",
+													"\r",
+													"pm.test(\"Error message contains 'isExtension: must not be null'\", () => {\r",
+													"    pm.expect(response.message).to.eqls(\"isExtension: must not be null\");\r",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{accessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"version\":{{gameVersion}} ,\r\n    \"title\": \"2.Arkham Horror: LOVECRAFTŮV DOPIS <3\",\r\n    \"minPlayers\": 4,\r\n    \"maxPlayers\": 8,\r\n    \"estimatedPlayTime\": 100,\r\n    \"canPlayOnlyOnce\": false,\r\n    \"ageRange\": {\r\n        \"minAge\": 16,\r\n        \"maxAge\": 50\r\n    },\r\n    \"authors\": [\r\n        \"Martin Seiji Kanai\"\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/boardGame/:id",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{gameID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "updateBoardGameWithoutVersion",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const response = pm.response.json();\r",
+													"\r",
+													"pm.test(\"Status code is 400\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"})\r",
+													"\r",
+													"pm.test(\"Error message contains 'version: must not be null'\", () => {\r",
+													"    pm.expect(response.message).to.eqls(\"version: must not be null\");\r",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{accessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"2.Arkham Horror: LOVECRAFTŮV DOPIS <3\",\r\n    \"minPlayers\": 4,\r\n    \"maxPlayers\": 8,\r\n    \"estimatedPlayTime\": 100,\r\n    \"canPlayOnlyOnce\": false,\r\n    \"isExtension\": false,\r\n    \"ageRange\": {\r\n        \"minAge\": 16,\r\n        \"maxAge\": 50\r\n    },\r\n    \"authors\": [\r\n        \"Martin Seiji Kanai\"\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseURL}}/boardGame/:id",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{gameID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
 						},
 						{
 							"name": "updateBoardGame",
@@ -944,7 +1932,7 @@
 									"variable": [
 										{
 											"key": "id",
-											"value": "44"
+											"value": "{{gameID}}"
 										}
 									]
 								}
@@ -958,11 +1946,260 @@
 					"item": [
 						{
 							"name": "positiveTests",
-							"item": []
+							"item": [
+								{
+									"name": "deleteBoardGame",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 204\", () => {\r",
+													"    pm.response.to.have.status(204);\r",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{accessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseURL}}/boardGame/:id",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{gameID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "deleteBoardGame",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const response = pm.response.json();\r",
+													"\r",
+													"pm.test(\"Status code is 404\", () => {\r",
+													"    pm.response.to.have.status(404);\r",
+													"})\r",
+													"\r",
+													"pm.test(\"Error message contains 'Požadovaný objekt neexistuje'\", () => {\r",
+													"    pm.expect(response.message).to.be.eqls(\"Požadovaný objekt neexistuje\")\r",
+													"})\r",
+													"\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseURL}}/boardGame/:id",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{gameID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "repeatedlyeleteBoardGame",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const response = pm.response.json();\r",
+													"\r",
+													"pm.test(\"Status code is 404\", () => {\r",
+													"    pm.response.to.have.status(204);\r",
+													"})\r",
+													"\r",
+													"pm.test(\"Error message contains 'Požadovaný objekt neexistuje'\", () => {\r",
+													"    pm.expect(response.message).to.be.eqls(\"Požadovaný objekt neexistuje\")\r",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{accessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseURL}}/boardGame/:id",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{gameID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "repeatedlyeleteBoardGame Copy",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"const response = pm.response.json();\r",
+													"\r",
+													"pm.test(\"Status code is 404\", () => {\r",
+													"    pm.response.to.have.status(204);\r",
+													"})\r",
+													"\r",
+													"pm.test(\"Error message contains 'Požadovaný objekt neexistuje'\", () => {\r",
+													"    pm.expect(response.message).to.be.eqls(\"Požadovaný objekt neexistuje\")\r",
+													"})"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{accessToken}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseURL}}/boardGame/:id",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{gameID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
 						},
 						{
 							"name": "negativeTests",
-							"item": []
+							"item": [
+								{
+									"name": "deleteBoardGame",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"Status code is 401\", () => {\r",
+													"    pm.response.to.have.status(401);\r",
+													"})\r",
+													""
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseURL}}/boardGame/:id",
+											"host": [
+												"{{baseURL}}"
+											],
+											"path": [
+												"boardGame",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "{{gameID}}"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
 						},
 						{
 							"name": "deleteBoardGame",
@@ -1222,6 +2459,11 @@
 		},
 		{
 			"key": "gameID",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "gameVersion",
 			"value": "",
 			"type": "string"
 		}
