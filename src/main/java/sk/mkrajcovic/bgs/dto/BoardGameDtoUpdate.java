@@ -45,8 +45,8 @@ public class BoardGameDtoUpdate implements BoardGameDtoIn {
 	@Schema(description = "play time in minutes")
 	private Integer estimatedPlayTime;
 
-	@Year
-	@Schema(description = "value between 1970 and the current year (both inclusive)")
+	@Year(from = 1900, message = "Year must be between 1900 and the current year (inclusive)")
+	@Schema(description = "value between 1900 and the current year (both inclusive)")
 	private Integer year;
 
 	@NotNull

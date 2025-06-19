@@ -21,10 +21,10 @@ public class BoardGameDtoCreate implements BoardGameDtoIn {
 
 	@NotBlank
 	@Size(max = 50)
-	private String title; // trim this
+	private String title;
 
 	@Size(max = 500)
-	private String description; // trim this
+	private String description;
 
 	@Positive
 	private Integer minPlayers;
@@ -36,8 +36,8 @@ public class BoardGameDtoCreate implements BoardGameDtoIn {
 	@Schema(description = "play time in minutes")
 	private Integer estimatedPlayTime;
 
-	@Year
-	@Schema(description = "value between 1970 and the current year (both inclusive)")
+	@Year(from = 1900, message = "Year must be between 1900 and the current year (inclusive)")
+	@Schema(description = "value between 1900 and the current year (both inclusive)")
 	private Integer year;
 
 	@Valid
@@ -48,7 +48,7 @@ public class BoardGameDtoCreate implements BoardGameDtoIn {
 
 	@Size(max = 120)
 	@YouTubeUrl(message = "The tutorial URL must be a valid YouTube link.")
-	private String tutorialUrl; // trim this
+	private String tutorialUrl;
 
 	private Boolean isCooperative;
 	private Boolean canPlayOnlyOnce;

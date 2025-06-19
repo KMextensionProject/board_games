@@ -196,6 +196,7 @@ public class BoardGameService {
 			"isExtension", toStringAnoNie(boardGame.getIsExtension()),
 			"isOneTimePlay", toStringAnoNie(boardGame.getCanPlayOnlyOnce()),
 			"tutorialUrl", boardGame.getTutorialUrl(),
+			"year", boardGame.getYearPublished(),
 			"authors", boardGame.getAuthors().stream()
 				.map(AuthorProjection::getName)
 				.collect(joining(", "))
